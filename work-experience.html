@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional portfolio of Rowan P. Dogwe, BS Computer Science student, University of the Cordilleras.">
+  <meta name="author" content="Rowan P. Dogwe">
+  <title>Work Experience | Rowan P. Dogwe</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrapper">
+
+    <header>
+      <div class="identity">
+        <h1>ROWAN P. DOGWE</h1>
+        <p class="subtitle">Bachelor of Science in Computer Science &middot; University of the Cordilleras, Baguio City</p>
+        <p class="contact">
+          <a href="mailto:rowan.p.dogwe@gmail.com">rowan.p.dogwe@gmail.com</a>
+          &nbsp;&middot;&nbsp; Baguio City, Philippines
+        </p>
+        <p class="resume-links">
+          <a href="Rowan-Dogwe-Resume.pdf" target="_blank" rel="noopener">View Resume</a>
+          <a href="Rowan-Dogwe-Resume.pdf" download="Rowan-Dogwe-Resume.pdf">Download Resume (PDF)</a>
+        </p>
+      </div>
+      <div class="photo">
+        <span class="monogram" aria-hidden="true">RD</span>
+        <img src="photo.jpg" alt="Formal photograph of Rowan P. Dogwe" onerror="this.remove()">
+      </div>
+    </header>
+
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="application-letter.html">Application Letter</a></li>
+        <li><a href="education.html">Education</a></li>
+        <li><a href="work-experience.html" class="active" aria-current="page">Work Experience</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="skills.html">Skills</a></li>
+        <li><a href="extra-curricular.html">Extra-Curricular Involvement</a></li>
+        <li><a href="references.html">Character References</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main>
+
+      <h2 class="page-title">Work Experience</h2>
+
+      <div class="xp">
+
+        <div class="xp-tabs" role="tablist" aria-label="Employers">
+          <button class="xp-tab" role="tab" aria-selected="true" aria-controls="xp-aziz" id="tab-aziz">
+            <strong>Aziz Holdings Limited</strong>
+            <span>December 2025 &ndash; Present</span>
+          </button>
+          <button class="xp-tab" role="tab" aria-selected="false" aria-controls="xp-elevora" id="tab-elevora">
+            <strong>Elevora Technologies</strong>
+            <span>December 2024 &ndash; Present</span>
+          </button>
+          <button class="xp-tab" role="tab" aria-selected="false" aria-controls="xp-wealthdeck" id="tab-wealthdeck">
+            <strong>WealthDeck</strong>
+            <span>March &ndash; April 2026</span>
+          </button>
+        </div>
+
+        <div class="xp-panels">
+
+          <section class="xp-panel" role="tabpanel" id="xp-aziz" aria-labelledby="tab-aziz">
+            <div class="xp-head">
+              <div>
+                <h3>AI Full-Stack Website and Mobile Engineer</h3>
+                <p class="xp-org">Aziz Holdings Limited &middot; New Zealand (Remote)</p>
+              </div>
+              <p class="xp-date">December 2025 &ndash; Present</p>
+            </div>
+            <ul>
+              <li>Serve as the primary mobile engineer on <strong>TaxIt</strong>, a tax-compliance application for New Zealand rideshare and delivery drivers, published on the Apple App Store and Google Play Store; authored 1,037 of its 1,094 commits.</li>
+              <li>Set up the iOS and Android release pipelines on GitHub Actions, including code signing, TestFlight test builds, and Google Play production builds.</li>
+              <li>Contributed to the TaxIt backend (FastAPI and PostgreSQL): administrator access control, subscription payment webhooks, and receipt scanning with Azure Document Intelligence.</li>
+              <li>Built the Aziz Holdings corporate website and the taxit.nz website as the sole developer, and contributed to the TaxIt administrator portal (Vue 3).</li>
+              <li>Built the frontend of Waka Mai, an imported-car marketplace (23 pages for buyers, agents, and administrators), and the administrator portal of Zuwwar Malaysia, a tourism marketplace.</li>
+            </ul>
+            <p class="xp-tech"><strong>Technologies:</strong> Flutter, Dart, Next.js, TypeScript, Vue 3, FastAPI, Python, PostgreSQL, GitHub Actions, Azure, Cloudflare, RevenueCat</p>
+          </section>
+
+          <section class="xp-panel" role="tabpanel" id="xp-elevora" aria-labelledby="tab-elevora" hidden>
+            <div class="xp-head">
+              <div>
+                <h3>AI Engineer</h3>
+                <p class="xp-org">Elevora Technologies &middot; United States (Remote)</p>
+              </div>
+              <p class="xp-date">December 2024 &ndash; Present</p>
+            </div>
+            <ul>
+              <li>Built production AI features for <strong>The Prompt Shift</strong>, a multi-language AI podcast platform: article ingestion from the web, a multi-step drafting pipeline using Claude models, and a preference-learning system that adapts topics to host feedback.</li>
+              <li>Built the Championship Series Registration portal of <strong>Hockey Time</strong>, a tournament-management platform, from start to finish: online payments with Stripe, automated reminders, and AI-assisted help requests.</li>
+              <li>Built the friend-town visiting system of <strong>Stashville</strong> (stashville.city), a social city-building game, with live updates that reconnect automatically after network loss.</li>
+              <li>Covered features with automated tests (Playwright, Jest, Vitest) and monitored production errors with Sentry.</li>
+            </ul>
+            <p class="xp-tech"><strong>Technologies:</strong> Next.js, React, TypeScript, tRPC, Prisma, PostgreSQL, Anthropic SDK, Vercel AI SDK, Inngest, Stripe, Sentry, PIXI.js</p>
+          </section>
+
+          <section class="xp-panel" role="tabpanel" id="xp-wealthdeck" aria-labelledby="tab-wealthdeck" hidden>
+            <div class="xp-head">
+              <div>
+                <h3>AI Website Developer (Freelance)</h3>
+                <p class="xp-org">WealthDeck &middot; Philippines (Remote)</p>
+              </div>
+              <p class="xp-date">March &ndash; April 2026</p>
+            </div>
+            <ul>
+              <li>Delivered a complete pre-launch waitlist website for a personal-finance startup, from an empty project to a live production site.</li>
+              <li>Built the landing page, sign-up survey, and confirmation flow, with a PostgreSQL database (Prisma and Neon).</li>
+              <li>Integrated transactional email (Loops.so) and product analytics (PostHog) so the client could follow up with sign-ups and measure interest.</li>
+            </ul>
+            <p class="xp-tech"><strong>Technologies:</strong> Next.js, TypeScript, Prisma, Neon PostgreSQL, Loops.so, PostHog, Vercel</p>
+          </section>
+
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <span>&copy; 2026 Rowan P. Dogwe. All rights reserved.</span>
+      <span>Last updated: November 2026</span>
+    </footer>
+
+  </div>
+  <script src="xp.js"></script>
+</body>
+</html>

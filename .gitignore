@@ -1,0 +1,5 @@
+.env*
+.vercel
+.vercelignore
+index-two-column.html
+.DS_Store
