@@ -3,58 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Professional portfolio of Rowan P. Dogwe, BS Computer Science student, University of the Cordilleras.">
+  <meta name="description" content="Education and achievements of Rowan P. Dogwe, BS Computer Science student at the University of the Cordilleras.">
   <meta name="author" content="Rowan P. Dogwe">
-  <title>Education | Rowan P. Dogwe</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#fbfaf6">
+  <title>Education &amp; Achievements | Rowan P. Dogwe</title>
+  <script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem("rpd-theme")}catch(e){}d.setAttribute("data-theme",t==="dark"?"dark":"light");try{var w=JSON.parse(sessionStorage.getItem("rpd-warp")||"null"),f=location.pathname.split("/").pop()||"index.html";if(w&&w.to===f&&Date.now()-w.ts<15000&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("warp-in")}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="warp.css">
+  <link rel="stylesheet" href="site.css">
 </head>
-<body>
-  <div class="wrapper">
+<body data-seed="202">
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="scan" aria-hidden="true"></div>
 
-    <header>
-      <div class="identity">
-        <h1>ROWAN P. DOGWE</h1>
-        <p class="subtitle">Bachelor of Science in Computer Science &middot; University of the Cordilleras, Baguio City</p>
-        <p class="contact">
-          <a href="mailto:rowan.p.dogwe@gmail.com">rowan.p.dogwe@gmail.com</a>
-          &nbsp;&middot;&nbsp; Baguio City, Philippines
-        </p>
-        <p class="resume-links">
-          <a href="Rowan-Dogwe-Resume.pdf" target="_blank" rel="noopener">View Resume</a>
-          <a href="Rowan-Dogwe-Resume.pdf" download="Rowan-Dogwe-Resume.pdf">Download Resume (PDF)</a>
-        </p>
-      </div>
-      <div class="photo">
-        <span class="monogram" aria-hidden="true">RD</span>
-        <img src="photo.jpg" alt="Formal photograph of Rowan P. Dogwe" onerror="this.remove()">
+  <div class="shell">
+    <header class="top" data-boot>
+      <a class="brand" href="index.html" data-warp><span class="mini" data-warp-anchor="2"><i></i></span><span><b>Rowan P. Dogwe</b><small>RPD-2026 &middot; BSCS &middot; UC Baguio</small></span></a>
+      <div class="top-r">
+        <nav class="nav" aria-label="Portfolio pages">
+          <a href="index.html" data-warp><em>0x00</em><span class="lg">Home</span><span class="sm">Home</span></a>
+          <a href="personal-info.html" data-warp><em>0x01</em><span class="lg">Personal Info</span><span class="sm">Personal</span></a>
+          <a href="education.html" data-warp aria-current="page"><em>0x02</em><span class="lg">Education &amp; Achievements</span><span class="sm">Education</span></a>
+          <a href="family.html" data-warp><em>0x03</em><span class="lg">Family</span><span class="sm">Family</span></a>
+        </nav>
+        <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="ico" aria-hidden="true"></span><span class="txt">Dark</span></button>
       </div>
     </header>
 
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="application-letter.html">Application Letter</a></li>
-        <li><a href="education.html" class="active" aria-current="page">Education</a></li>
-        <li><a href="work-experience.html">Work Experience</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="skills.html">Skills</a></li>
-        <li><a href="extra-curricular.html">Extra-Curricular Involvement</a></li>
-        <li><a href="references.html">Character References</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
+    <section class="head" data-boot>
+      <div>
+        <span class="kicker">0x02 &middot; Page 03 / 04</span>
+        <h1 data-decode>Education <i>&amp; Achievements</i></h1>
+      </div>
+      <p>Every school I passed through, from kindergarten to university, on one data bus.</p>
+    </section>
 
-    <main>
+    <main class="body">
+      <div class="edu">
+        <div class="bus">
+          <div class="stop" data-boot>
+            <span class="node">K</span>
+            <div class="panel tick empty"><span class="label">Stage 01 &middot; Kindergarten</span><h2 class="todo">School name</h2><p class="todo">Years attended &mdash; to be added</p><span class="tag">Done</span></div>
+          </div>
+          <div class="stop" data-boot>
+            <span class="node">EL</span>
+            <div class="panel tick empty"><span class="label">Stage 02 &middot; Elementary</span><h2 class="todo">School name</h2><p class="todo">Years attended &mdash; to be added</p><span class="tag">Done</span></div>
+          </div>
+          <div class="stop" data-boot>
+            <span class="node">JH</span>
+            <div class="panel tick empty"><span class="label">Stage 03 &middot; Junior High</span><h2 class="todo">School name</h2><p class="todo">Years attended &mdash; to be added</p><span class="tag">Done</span></div>
+          </div>
+          <div class="stop" data-boot>
+            <span class="node">SH</span>
+            <div class="panel tick"><span class="label">Stage 04 &middot; Senior High</span><h2>Informatics Institute</h2><p>ICT strand &middot; Baguio City</p><span class="tag">With Honors</span></div>
+          </div>
+          <div class="stop now still" data-boot>
+            <span class="node" data-warp-anchor="1">CS</span>
+            <div class="panel tick"><span class="label">Stage 05 &middot; College</span><h2>University of the Cordilleras</h2><p>BS Computer Science &middot; First year &middot; A.Y. 2026&ndash;2027</p><span class="tag">In progress</span></div>
+          </div>
+        </div>
 
-      <h2 class="page-title">Education</h2>
-
+        <section class="awards" data-boot>
+          <h3>Achievements</h3>
+          <div class="row">
+            <div class="panel tick award" data-boot><span class="medal">01</span><div><b>With Honors</b><p>Senior High School, Informatics Institute (ICT strand)</p></div></div>
+            <div class="panel tick award" data-boot><span class="medal">02</span><div><b>Published mobile app</b><p>TaxIt on the App Store and Google Play, as primary mobile engineer</p></div></div>
+            <div class="panel tick award" data-boot><span class="medal">03</span><div><b>Organizer &amp; host</b><p>The Work Behind the Luck, a community that trains students to be problem solvers</p></div></div>
+            <div class="panel tick award empty" data-boot><span class="medal">04</span><div><b class="todo">More to come</b><p class="todo">Next achievement &mdash; to be added</p></div></div>
+          </div>
+        </section>
+      </div>
     </main>
 
-    <footer>
-      <span>&copy; 2026 Rowan P. Dogwe. All rights reserved.</span>
-      <span>Last updated: November 2026</span>
+    <footer class="foot" data-boot>
+      <a class="step prev" href="personal-info.html" data-warp>&larr; <em>0x01</em> Personal Info</a>
+      <span class="status"><i></i> Signal locked &middot; clk 4.20 GHz</span>
+      <a class="step next" href="family.html" data-warp><em>0x03</em> Family &rarr;</a>
     </footer>
-
   </div>
+
+  <script src="warp.js"></script>
+  <script src="site.js"></script>
 </body>
 </html>

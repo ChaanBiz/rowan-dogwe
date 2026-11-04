@@ -3,113 +3,927 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Professional portfolio of Rowan P. Dogwe, BS Computer Science student, University of the Cordilleras.">
+  <meta name="description" content="Rowan P. Dogwe — BS Computer Science, University of the Cordilleras. Professional portfolio.">
   <meta name="author" content="Rowan P. Dogwe">
-  <title>Rowan P. Dogwe | Professional Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#fbfaf6">
+  <title>Rowan P. Dogwe</title>
+  <script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem("rpd-theme")}catch(e){}d.setAttribute("data-theme",t==="dark"?"dark":"light");try{var w=JSON.parse(sessionStorage.getItem("rpd-warp")||"null"),f=location.pathname.split("/").pop()||"index.html";if(w&&w.to===f&&Date.now()-w.ts<15000&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("warp-in")}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="warp.css">
+  <style>
+    :root {
+      --bg: #fbfaf6;
+      --gold: #b08327;
+      --gold-hi: #d9ad4f;
+      --gold-soft: rgba(176, 131, 39, 0.55);
+      --gold-dim: rgba(176, 131, 39, 0.28);
+      --ivory: #111111;
+      --solid: #111111; --on-solid: #ffffff; --pin: #111111; --pill: rgba(255, 255, 255, 0.75); --glow: rgba(251, 250, 246, 0.9); --glow2: rgba(251, 250, 246, 0.5);
+      --muted: #6e6a62;
+      --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      --chip: clamp(280px, min(35vw, 66vh), 520px);
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0b0b0c; --gold: #d9ad4f; --gold-hi: #f1d38a; --gold-soft: rgba(217, 173, 79, 0.55); --gold-dim: rgba(217, 173, 79, 0.28);
+      --ivory: #f2ede2; --muted: #9c968a; --solid: #f2ede2; --on-solid: #111111; --pin: #c9a063; --pill: rgba(20, 20, 20, 0.75);
+      --glow: rgba(217, 173, 79, 0.07); --glow2: rgba(217, 173, 79, 0.05);
+    }
+    html, body, .bar, .btn, .icon-btn { transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--ivory); }
+    body { font-family: var(--mono); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    /* ================= intro: one bit -> one person ================= */
+    #intro { position: fixed; inset: 0; z-index: 45; background: var(--bg); transition: background 0.9s ease, opacity 0.7s ease, visibility 0.7s; cursor: pointer; }
+    #intro.land { background: transparent; pointer-events: none; }
+    #intro.gone { opacity: 0; visibility: hidden; }
+    #introCv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .hud { position: absolute; font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); transition: opacity 0.5s ease; }
+    .hud.tl { top: 22px; left: clamp(18px, 4vw, 48px); }
+    .hud.tr { top: 22px; right: clamp(18px, 4vw, 48px); font-variant-numeric: tabular-nums; }
+    .hud.bl { bottom: 22px; left: clamp(18px, 4vw, 48px); color: var(--muted); }
+    #intro.land .hud, #intro.land .cap { opacity: 0; }
+    .cap { position: absolute; left: 0; right: 0; bottom: 11vh; text-align: center; pointer-events: none; transition: opacity 0.5s ease; }
+    .cap b { display: block; font: 400 clamp(54px, 8vw, 120px)/1 var(--serif); color: var(--ivory); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; text-shadow: 0 0 40px rgba(217, 173, 79, 0.3); }
+    .cap b i { color: var(--gold); }
+    .cap span { display: block; margin-top: 10px; font-size: 11.5px; letter-spacing: 0.34em; text-transform: uppercase; color: var(--gold); }
+    #flash { position: fixed; inset: 0; z-index: 40; pointer-events: none; background: radial-gradient(circle at var(--fx, 70%) var(--fy, 50%), rgba(255, 236, 190, 0.75), rgba(214, 169, 92, 0.18) 35%, transparent 65%); opacity: 0; }
+    #flash.go { animation: flash 0.9s ease-out; }
+    @keyframes flash { 8% { opacity: 1; } to { opacity: 0; } }
+
+    /* ================= circuit board ================= */
+    #board { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    .vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background:
+        radial-gradient(ellipse 34% 42% at 22% 50%, var(--glow), transparent),
+        radial-gradient(ellipse 30% 46% at 78% 50%, var(--glow2), transparent),
+        radial-gradient(ellipse at 50% 50%, transparent 34%, rgba(20, 16, 10, 0.38) 62%, rgba(8, 6, 4, 0.72) 84%, rgba(0, 0, 0, 0.88) 100%);
+    }
+
+    /* ================= bars ================= */
+    .bar {
+      position: fixed; left: 0; right: 0; z-index: 6;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 18px clamp(18px, 4vw, 48px);
+      font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #f4efe4; font-weight: 600; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+      opacity: 0; transition: opacity 0.8s ease; pointer-events: none;
+    }
+    .bar > * { pointer-events: auto; }
+    .bar.top { top: 0; }
+    .bar.bottom { bottom: 0; }
+    body.ready .bar { opacity: 1; }
+    .led { display: inline-flex; align-items: center; gap: 10px; }
+    .led i { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: clock 1s steps(2, jump-none) infinite; }
+    @keyframes clock { 50% { opacity: 0.25; box-shadow: none; } }
+    .hint { transition: opacity 0.6s ease; }
+    .hint.gone { opacity: 0; }
+    .icon-btn {
+      font: 500 11.5px var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); background: var(--pill);
+      border: 1px solid var(--gold-dim); border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: 0.2s;
+    }
+    .icon-btn:hover, .icon-btn[aria-pressed="true"] { color: var(--ivory); border-color: var(--gold-soft); }
+
+    /* ================= stage ================= */
+    .stage {
+      position: relative; z-index: 3; height: 100vh; height: 100dvh;
+      display: grid; grid-template-columns: minmax(0, 1.15fr) auto;
+      align-items: center; gap: clamp(28px, 6vw, 110px); padding: 0 clamp(24px, 7vw, 120px);
+    }
+    .identity { will-change: transform; }
+
+    .kicker {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 24px; opacity: 0; transform: translateY(8px); transition: 0.8s ease;
+    }
+    .kicker::before { content: ""; width: 38px; height: 1px; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+    .name { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 8.6vw, 150px); line-height: 0.88; letter-spacing: -0.01em; }
+    .name .line { display: block; white-space: nowrap; }
+    .name .line + .line { font-style: italic; padding-left: 0.42em; color: var(--gold); }
+    .name .line.metal {
+      background: linear-gradient(100deg, #6e4c14 0%, #b08327 22%, #e8c66e 34%, #b08327 46%, #7f5a1a 70%, #cfa043 88%, #6e4c14 100%);
+      background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shimmer 7s linear infinite;
+      padding: 0 0.12em 0.2em 0; margin-bottom: -0.2em; /* room for the g descender and italic overhang */
+    }
+    :root[data-theme="dark"] .chip { box-shadow: 0 50px 90px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(217, 173, 79, 0.28), 0 0 60px rgba(217, 173, 79, 0.08); }
+    .bar-r { display: inline-flex; gap: 8px; align-items: center; }
+    body.warping .name .line.metal { background: none; color: var(--gold); -webkit-text-fill-color: var(--gold); animation: none; }
+    @keyframes shimmer { from { background-position: 100% 0; } to { background-position: -160% 0; } }
+
+    .ch { position: relative; display: inline-block; transition: transform 0.25s ease-out; }
+    .ch .glyph { visibility: hidden; }
+    .ch.on .glyph { visibility: visible; animation: settle 0.55s ease; }
+    @keyframes settle { from { opacity: 0.1; filter: blur(8px); } }
+    .ch .scr { position: absolute; inset: 0; display: grid; place-items: center; font: 500 0.42em var(--mono); color: var(--gold); font-style: normal; }
+    .ch.on .scr { display: none; }
+    .ch.on::after {
+      content: attr(data-bin); position: absolute; left: 50%; bottom: 100%; transform: translate(-50%, 4px);
+      font: 500 12px var(--mono); font-style: normal; letter-spacing: 0.08em; white-space: nowrap;
+      color: #fff; -webkit-text-fill-color: #fff; background: rgba(17, 17, 17, 0.94);
+      border: 1px solid var(--gold-soft); border-radius: 4px; padding: 5px 9px;
+      opacity: 0; pointer-events: none; transition: 0.18s ease;
+    }
+    .ch.on:hover::after { opacity: 1; transform: translate(-50%, -6px); }
+    .line:not(.metal) .ch.on:hover .glyph { color: var(--gold-hi); text-shadow: 0 0 26px rgba(214, 169, 92, 0.75); }
+
+    .role { margin-top: 30px; font-size: 12.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); line-height: 2; opacity: 0; transform: translateY(8px); transition: 0.8s ease 0.1s; }
+    .role b { color: var(--ivory); font-weight: 500; }
+    .actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 14px; opacity: 0; transform: translateY(8px); transition: 0.8s ease 0.2s; }
+    body.ready .kicker, body.ready .role, body.ready .actions { opacity: 1; transform: none; }
+
+    .btn {
+      position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 12px;
+      font: 600 12.5px var(--mono); letter-spacing: 0.2em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; padding: 15px 24px; border-radius: 2px; transition: 0.2s;
+    }
+    .btn.primary { background: var(--gold); color: #111; border: 1px solid var(--gold); box-shadow: 0 0 0 rgba(214, 169, 92, 0); }
+    .btn.primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%); transform: translateX(-120%); animation: sweep 3.6s ease-in-out infinite 3s; }
+    @keyframes sweep { 0%, 70% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+    .btn.primary:hover { background: var(--gold-hi); border-color: var(--gold-hi); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(214, 169, 92, 0.35); }
+    .btn.ghost { background: var(--solid); color: var(--on-solid); border: 1px solid var(--solid); }
+    .btn.ghost:hover { border-color: var(--gold); color: var(--gold-hi); transform: translateY(-2px); }
+    .btn kbd { font: 500 10px var(--mono); padding: 2px 6px; border: 1px solid currentColor; border-radius: 3px; opacity: 0.6; }
+
+    /* ================= the chip ================= */
+    .chip-wrap { position: relative; padding: 18px; margin-right: 1.5rem; opacity: 0; transition: opacity 0.7s ease; }
+    body.chip-on .chip-wrap { opacity: 1; }
+    .chip .pins { transition: transform 0.7s cubic-bezier(.2, .8, .2, 1) 0.15s; }
+    .pins.t, .pins.b { transform: scaleX(0); }
+    .pins.l, .pins.r { transform: scaleY(0); }
+    body.chip-on .pins { transform: none; }
+    .chip-wrap::before {
+      content: ""; position: absolute; inset: -18%; z-index: -1; border-radius: 50%;
+      background: radial-gradient(circle, rgba(214, 169, 92, 0.22), transparent 62%);
+      animation: breathe 4s ease-in-out infinite;
+    }
+    @keyframes breathe { 50% { transform: scale(1.08); opacity: 0.6; } }
+    .tilt { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d; will-change: transform; }
+    .chip {
+      position: relative; width: var(--chip); padding: 7% 7% 5%;
+      background: linear-gradient(150deg, #1d201e 0%, #121413 55%, #0b0c0c 100%);
+      border-radius: 10px;
+      box-shadow: 0 50px 90px rgba(0, 0, 0, 0.5), 0 18px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: box-shadow 0.3s ease;
+    }
+    .chip.zap { box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(246, 220, 162, 0.6), 0 0 70px rgba(246, 220, 162, 0.45); }
+    .chip::after { /* glass reflection that follows the cursor */
+      content: ""; position: absolute; inset: 0; border-radius: 10px; pointer-events: none; mix-blend-mode: screen;
+      background: radial-gradient(circle at var(--mx, 30%) var(--my, 20%), rgba(255, 255, 255, 0.14), transparent 45%);
+    }
+    .pins { position: absolute; background: repeating-linear-gradient(90deg, var(--pin) 0 7px, transparent 7px 17px); }
+    .pins.t, .pins.b { left: 13%; right: 13%; height: 16px; }
+    .pins.t { top: -16px; }
+    .pins.b { bottom: -16px; }
+    .pins.l, .pins.r { top: 13%; bottom: 13%; width: 16px; background: repeating-linear-gradient(180deg, var(--pin) 0 7px, transparent 7px 17px); }
+    .pins.l { left: -16px; }
+    .pins.r { right: -16px; }
+    .die {
+      position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 3px;
+      background: #060a08; box-shadow: inset 0 0 0 1px rgba(214, 169, 92, 0.35), 0 0 40px rgba(214, 169, 92, 0.1); cursor: crosshair;
+    }
+    .die::before { /* scanning line */
+      content: ""; position: absolute; left: 0; right: 0; top: -10%; height: 2px; z-index: 2; pointer-events: none;
+      background: linear-gradient(90deg, transparent, var(--gold-hi), transparent); box-shadow: 0 0 14px var(--gold);
+      opacity: 0; animation: scan 5.5s ease-in-out infinite 3.2s;
+    }
+    @keyframes scan { 0% { top: -4%; opacity: 0; } 8% { opacity: 0.9; } 40% { top: 104%; opacity: 0.6; } 41%, 100% { opacity: 0; top: 104%; } }
+    .corner { position: absolute; width: 14px; height: 14px; border-color: var(--gold-hi); border-style: solid; border-width: 0; z-index: 2; opacity: 0.8; pointer-events: none; }
+    .corner.a { top: 6px; left: 6px; border-top-width: 1.5px; border-left-width: 1.5px; }
+    .corner.b { top: 6px; right: 6px; border-top-width: 1.5px; border-right-width: 1.5px; }
+    .corner.c { bottom: 6px; left: 6px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+    .corner.d { bottom: 6px; right: 6px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+    #portrait { width: 100%; height: 100%; display: block; }
+    .die img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+    .no-canvas .die img { opacity: 1; }
+    .marking { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-top: 14px; font-size: 10px; letter-spacing: 0.16em; line-height: 1.7; color: rgba(214, 169, 92, 0.6); text-transform: uppercase; }
+    .marking .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(214, 169, 92, 0.4); flex: none; margin-bottom: 4px; }
+
+    /* ================= probe cursor ================= */
+    #probe { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+    #probe.on { opacity: 1; }
+    #probe .ring { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1px solid var(--gold-soft); border-radius: 50%; transition: width 0.2s, height 0.2s, margin 0.2s, border-color 0.2s; }
+    #probe.hot .ring { width: 54px; height: 54px; margin: -27px 0 0 -27px; border-color: var(--gold-hi); }
+    #probe .ring::before, #probe .ring::after { content: ""; position: absolute; background: var(--gold-soft); }
+    #probe .ring::before { left: 50%; top: -7px; bottom: -7px; width: 1px; transform: translateX(-0.5px); -webkit-mask: linear-gradient(transparent 0 7px, #000 7px 9px, transparent 9px calc(100% - 9px), #000 calc(100% - 9px) calc(100% - 7px), transparent calc(100% - 7px)); mask: linear-gradient(#000 0 6px, transparent 6px calc(100% - 6px), #000 calc(100% - 6px)); }
+    #probe .ring::after { top: 50%; left: -7px; right: -7px; height: 1px; transform: translateY(-0.5px); mask: linear-gradient(90deg, #000 0 6px, transparent 6px calc(100% - 6px), #000 calc(100% - 6px)); -webkit-mask: linear-gradient(90deg, #000 0 6px, transparent 6px calc(100% - 6px), #000 calc(100% - 6px)); }
+    #probe .read { position: absolute; left: 26px; top: 18px; font-size: 10px; letter-spacing: 0.12em; color: var(--gold); white-space: nowrap; text-shadow: 0 1px 6px var(--bg); }
+
+    .ripple { position: fixed; z-index: 4; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 1.5px solid var(--gold-hi); pointer-events: none; animation: ripple 0.7s ease-out forwards; }
+    @keyframes ripple { to { transform: scale(8); opacity: 0; } }
+
+    /* ================= responsive ================= */
+    @media (max-height: 760px) and (min-width: 821px) {
+      :root { --chip: clamp(260px, min(33vw, 64vh), 440px); }
+      .role { margin-top: 20px; }
+      .actions { margin-top: 24px; }
+    }
+    @media (max-width: 820px) {
+      :root { --chip: min(62vw, 34vh, 300px); }
+      .stage { grid-template-columns: 1fr; align-content: center; justify-items: center; text-align: center; gap: 34px; padding-top: 56px; padding-bottom: 56px; }
+      .chip-wrap { order: -1; margin-right: 0; }
+      .name { font-size: clamp(44px, 14vw, 86px); }
+      .name .line + .line { padding-left: 0; }
+      .kicker { justify-content: center; margin-bottom: 12px; letter-spacing: 0.24em; }
+      .kicker::before { display: none; }
+      .role { margin-top: 16px; font-size: 10.5px; letter-spacing: 0.16em; }
+      .actions { justify-content: center; margin-top: 20px; }
+      .btn { padding: 13px 18px; font-size: 11.5px; }
+      .btn kbd, .bar .hint, .bar .coords { display: none; }
+    }
+    @media (pointer: coarse) { #probe { display: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      #intro { display: none; }
+    }
+  </style>
 </head>
 <body>
-  <div class="wrapper">
 
-    <header>
-      <div class="identity">
-        <h1>ROWAN P. DOGWE</h1>
-        <p class="subtitle">Bachelor of Science in Computer Science &middot; University of the Cordilleras, Baguio City</p>
-        <p class="contact">
-          <a href="mailto:rowan.p.dogwe@gmail.com">rowan.p.dogwe@gmail.com</a>
-          &nbsp;&middot;&nbsp; Baguio City, Philippines
-        </p>
-        <p class="resume-links">
-          <a href="Rowan-Dogwe-Resume.pdf" target="_blank" rel="noopener">View Resume</a>
-          <a href="Rowan-Dogwe-Resume.pdf" download="Rowan-Dogwe-Resume.pdf">Download Resume (PDF)</a>
-        </p>
-      </div>
-      <div class="photo">
-        <span class="monogram" aria-hidden="true">RD</span>
-        <img src="photo.jpg" alt="Formal photograph of Rowan P. Dogwe" onerror="this.remove()">
-      </div>
-    </header>
-
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a href="index.html" class="active" aria-current="page">Home</a></li>
-        <li><a href="application-letter.html">Application Letter</a></li>
-        <li><a href="education.html">Education</a></li>
-        <li><a href="work-experience.html">Work Experience</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="skills.html">Skills</a></li>
-        <li><a href="extra-curricular.html">Extra-Curricular Involvement</a></li>
-        <li><a href="references.html">Character References</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-
-    <main>
-
-      <section>
-        <h2>Career Objective</h2>
-        <p>
-          A disciplined Computer Science student seeking a position as a Junior Software Developer,
-          where I can apply my professional experience in building web and mobile applications to
-          deliver reliable, well-documented systems for the organization.
-        </p>
-      </section>
-
-      <section>
-        <h2>Profile</h2>
-        <p>
-          I am a first-year Bachelor of Science in Computer Science student at the University of the
-          Cordilleras. While studying full-time, I work remotely as a software engineer for two companies
-          abroad: Aziz Holdings Limited in New Zealand and Elevora Technologies in the United States.
-          At Aziz Holdings, I am the primary mobile engineer on TaxIt, a tax-compliance application
-          published on the Apple App Store and Google Play Store. I fully support myself through this
-          work, which has taught me to manage my time, meet deadlines, and take responsibility for the
-          quality of everything I deliver.
-        </p>
-      </section>
-
-      <section class="glance-sec" aria-label="At a glance">
-        <div class="glance">
-
-          <div class="card">
-            <h3>Education</h3>
-            <div class="item">
-              <strong>BS Computer Science</strong>
-              <span>University of the Cordilleras</span>
-              <span>First Year, A.Y. 2026&ndash;2027</span>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Current Employment</h3>
-            <div class="item">
-              <strong>Aziz Holdings Limited</strong>
-              <span>New Zealand (Remote)</span>
-            </div>
-            <div class="item">
-              <strong>Elevora Technologies</strong>
-              <span>United States (Remote)</span>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Technical Skills</h3>
-            <div class="item">
-              <strong>Programming Languages</strong>
-              <span>Java, TypeScript, JavaScript, Dart, Python, SQL</span>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <footer>
-      <span>&copy; 2026 Rowan P. Dogwe. All rights reserved.</span>
-      <span>Last updated: November 2026</span>
-    </footer>
-
+  <div id="intro" aria-hidden="true">
+    <canvas id="introCv"></canvas>
+    <div class="hud tl">RPD-2026 &middot; Power-on sequence</div>
+    <div class="hud tr" id="tcode">T+0.000s</div>
+    <div class="hud bl">Click to skip</div>
+    <div class="cap" id="cap"><b id="capMain">1</b><span id="capSub">bit</span></div>
   </div>
+  <div id="flash" aria-hidden="true"></div>
+
+  <canvas id="board" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="bar top">
+    <span>Portfolio &middot; 2026</span>
+    <span class="bar-r">
+      <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="ico" aria-hidden="true"></span><span class="txt">Dark</span></button>
+      <button class="icon-btn" id="sound" type="button" aria-pressed="false">&#9834; Sound off</button>
+    </span>
+  </header>
+
+  <main class="stage">
+    <section class="identity" id="identity">
+      <h1 class="name" aria-label="Rowan P. Dogwe">
+        <span class="line" data-word="ROWAN P." aria-hidden="true"></span>
+        <span class="line" data-word="Dogwe" aria-hidden="true"></span>
+      </h1>
+      <div class="actions">
+        <button class="btn primary" id="enter" type="button">Enter portfolio</button>
+        <a class="btn ghost" href="Rowan-Dogwe-Resume.pdf" target="_blank" rel="noopener">View r&eacute;sum&eacute;</a>
+      </div>
+    </section>
+
+    <div class="chip-wrap" id="chipWrap">
+      <div class="tilt" id="tilt">
+        <div class="chip" id="chip" data-warp-anchor="1">
+          <span class="pins t"></span><span class="pins r"></span><span class="pins b"></span><span class="pins l"></span>
+          <div class="die" id="die">
+            <canvas id="portrait" aria-hidden="true"></canvas>
+            <img src="photo.jpg" alt="Formal photograph of Rowan P. Dogwe">
+            <span class="corner a"></span><span class="corner b"></span><span class="corner c"></span><span class="corner d"></span>
+          </div>
+          <div class="marking">
+            <span>RPD-2026 &middot; BSCS<br>UC Baguio &middot; PH</span>
+            <span class="dot" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bar bottom">
+    <span class="led"><i></i> System ready &middot; clk 1&nbsp;Hz</span>
+    <span class="hint" id="hint">Hover the chip to read the bits &middot; click anywhere to strike</span>
+    <span class="coords">16.40&deg;N &middot; 120.59&deg;E</span>
+  </footer>
+
+  <div id="probe" aria-hidden="true"><span class="ring"></span><span class="read" id="probeRead"></span></div>
+
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (s) { return document.querySelector(s); };
+    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var touch = matchMedia("(pointer: coarse)").matches;
+    var T0 = performance.now(), live = false;
+
+    function rng(seed) {
+      return function () {
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+    /* ================= sound (optional) ================= */
+    var ac = null, soundOn = false;
+    function audio() { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); return ac; }
+    function tone(freq, dur, vol, type, slideTo) {
+      if (!soundOn) return;
+      try {
+        var a = audio(), o = a.createOscillator(), g = a.createGain();
+        o.type = type || "triangle"; o.frequency.setValueAtTime(freq, a.currentTime);
+        if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, a.currentTime + dur);
+        g.gain.setValueAtTime(vol || 0.04, a.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+        o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + dur + 0.02);
+      } catch (e) {}
+    }
+    function zapSound() {
+      if (!soundOn) return;
+      try {
+        var a = audio(), len = a.sampleRate * 0.18, buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
+        for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5);
+        var src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+        f.type = "bandpass"; f.frequency.value = 2400; f.Q.value = 0.8; g.gain.value = 0.18;
+        src.buffer = buf; src.connect(f); f.connect(g); g.connect(a.destination); src.start();
+      } catch (e) {}
+      tone(1400, 0.12, 0.03, "square", 300);
+    }
+    var soundBtn = $("#sound");
+    soundBtn.addEventListener("click", function (e) {
+      e.stopPropagation(); soundOn = !soundOn;
+      soundBtn.setAttribute("aria-pressed", String(soundOn));
+      soundBtn.innerHTML = "&#9834; Sound " + (soundOn ? "on" : "off");
+      try { sessionStorage.setItem("rpd-snd", soundOn ? "1" : "0"); } catch (err) {}
+      if (soundOn) tone(90, 0.6, 0.06, "sine", 440);
+    });
+
+    /* ================= board geometry ================= */
+    var cv = $("#board"), ctx = cv.getContext("2d");
+    var W, H, DPR, paths = [], chipPaths = [], pins = [], art = [], gates = [], cache = null;
+    var pulses = [], arcs = [], motes = [], pointer = null, speed = 0;
+    var TRACE_MS = reduce ? 0 : 1500;
+
+    function makePath(pts, via) {
+      var segs = [], total = 0;
+      for (var i = 1; i < pts.length; i++) { var l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); segs.push(l); total += l; }
+      return { pts: pts, segs: segs, len: total, via: via };
+    }
+    function pointAt(p, d) {
+      for (var i = 0; i < p.segs.length; i++) {
+        if (d <= p.segs[i] || i === p.segs.length - 1) {
+          var t = p.segs[i] ? clamp(d / p.segs[i], 0, 1) : 0, a = p.pts[i], b = p.pts[i + 1];
+          return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+        }
+        d -= p.segs[i];
+      }
+      return p.pts[p.pts.length - 1];
+    }
+    function rectOf(el, pad) { var r = el.getBoundingClientRect(); return { x: r.left - pad, y: r.top - pad, w: r.width + pad * 2, h: r.height + pad * 2 }; }
+    function hits(a, list) { return list.some(function (b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }); }
+
+    function build() {
+      DPR = Math.min(2, window.devicePixelRatio || 1);
+      W = innerWidth; H = innerHeight;
+      cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      paths = []; chipPaths = []; pins = []; art = []; gates = [];
+      var R = rng(20261103), chipEl = $("#chip"), r = chipEl.getBoundingClientRect(), pin = 16, n = 9;
+      var sides = [
+        { o: [1, 0], p: [0, 1], at: function (f) { return [r.right + pin, r.top + r.height * f]; } },
+        { o: [-1, 0], p: [0, 1], at: function (f) { return [r.left - pin, r.top + r.height * f]; } },
+        { o: [0, -1], p: [1, 0], at: function (f) { return [r.left + r.width * f, r.top - pin]; } },
+        { o: [0, 1], p: [1, 0], at: function (f) { return [r.left + r.width * f, r.bottom + pin]; } }
+      ];
+      sides.forEach(function (s) {
+        for (var i = 0; i < n; i++) {
+          var f = 0.16 + 0.68 * (i + 0.5) / n, sign = f < 0.5 ? -1 : 1, a = s.at(f), L0 = 14 + R() * 26;
+          var b = [a[0] + s.o[0] * L0, a[1] + s.o[1] * L0];
+          var D = (8 + R() * 70) * (0.35 + Math.abs(f - 0.5) * 2.4);
+          var c = [b[0] + s.o[0] * D + s.p[0] * sign * D, b[1] + s.o[1] * D + s.p[1] * sign * D];
+          var len = 60 + R() * 560, e = [c[0] + s.o[0] * len, c[1] + s.o[1] * len];
+          var p = makePath([a, b, c, e], e[0] > 0 && e[0] < W && e[1] > 0 && e[1] < H);
+          chipPaths.push(p); paths.push(p); pins.push(a);
+        }
+      });
+      var dirs = [[1, 0], [0, 1], [-1, 0], [0, -1], [0.7071, 0.7071], [-0.7071, 0.7071], [0.7071, -0.7071], [-0.7071, -0.7071]];
+      for (var k = 0; k < 30; k++) {
+        var pt = [R() * W, R() * H], pts = [pt], d = Math.floor(R() * 4);
+        for (var j = 0; j < 3 + Math.floor(R() * 3); j++) {
+          var dir = j % 2 ? dirs[4 + Math.floor(R() * 4)] : dirs[d], l = 40 + R() * 200;
+          pt = [pt[0] + dir[0] * l, pt[1] + dir[1] * l]; pts.push(pt);
+        }
+        var bg = makePath(pts, true); bg.bg = true; paths.push(bg);
+      }
+
+      /* silkscreen parts placed where they don't cover text or the chip */
+      var avoid = [rectOf($("#identity"), 26), rectOf($("#chipWrap"), 40), { x: 0, y: 0, w: W, h: 70 }, { x: 0, y: H - 130, w: W, h: 130 }];
+      function place(w, h) {
+        for (var t = 0; t < 60; t++) {
+          var c2 = { x: 24 + R() * (W - w - 48), y: 70 + R() * (H - h - 200), w: w, h: h };
+          if (!hits(c2, avoid)) { avoid.push({ x: c2.x - 14, y: c2.y - 14, w: w + 28, h: h + 28 }); return c2; }
+        }
+        return null;
+      }
+      var kinds = ["AND", "OR", "XOR", "NOT", "AND", "XOR", "OR"];
+      kinds.forEach(function (kind) {
+        var spot = place(96, 46); if (!spot) return;
+        gates.push({ kind: kind, x: spot.x + 22, y: spot.y + 16, a: R() < 0.5 ? 1 : 0, b: R() < 0.5 ? 1 : 0, next: 0, period: 700 + R() * 1100 });
+      });
+      var ri = 1, ci = 1, ui = 2;
+      for (var m = 0; m < 12; m++) { var s1 = place(44, 22); if (s1) art.push({ t: "R", x: s1.x, y: s1.y, label: "R" + (ri++ + 9) }); }
+      for (var q = 0; q < 9; q++) { var s2 = place(30, 26); if (s2) art.push({ t: "C", x: s2.x, y: s2.y, label: "C" + ci++ }); }
+      for (var u = 0; u < 4; u++) { var s3 = place(52, 40); if (s3) art.push({ t: "U", x: s3.x, y: s3.y, label: "U" + ui++ }); }
+      for (var fz = 0; fz < 3; fz++) { var s4 = place(18, 18); if (s4) art.push({ t: "F", x: s4.x + 9, y: s4.y + 9 }); }
+
+      motes = [];
+      for (var z = 0; z < (touch ? 26 : 54); z++) motes.push({ x: R() * W, y: R() * H, z: 0.3 + R() * 0.7, s: 0.2 + R() * 0.5, ph: R() * 6.28 });
+      cache = null;
+    }
+
+    /* ---------- drawing helpers ---------- */
+    /* board colours follow the light / dark theme */
+    var P, COPPER, SILK, SILK_TXT;
+    function pal() {
+      var dk = document.documentElement.getAttribute("data-theme") === "dark";
+      P = dk ? { ink: "242,237,226", gold: "241,211,138", goldOn: "rgba(241,211,138,0.95)", goldFill: "#f1d38a", arcCore: "255,248,230", arcGlow: "246,210,140", copper: "rgba(217,173,79,0.3)", trace: "217,173,79", one: "#f1d38a", zero: "#e9e2d2", oneSh: "rgba(217,173,79,0.8)" }
+               : { ink: "17,17,17", gold: "176,131,39", goldOn: "rgba(176,131,39,0.95)", goldFill: "#d9ad4f", arcCore: "60,40,8", arcGlow: "217,173,79", copper: "rgba(17,17,17,0.3)", trace: "17,17,17", one: "#b08327", zero: "#151515", oneSh: "rgba(217,173,79,0.75)" };
+      COPPER = P.copper; SILK = "rgba(" + P.ink + ",0.2)"; SILK_TXT = "rgba(" + P.ink + ",0.36)";
+    }
+    pal();
+    addEventListener("rpd:theme", function () { pal(); cache = null; });
+    function strokePath(c, p, upto) {
+      var left = upto; c.beginPath(); c.moveTo(p.pts[0][0], p.pts[0][1]);
+      for (var i = 0; i < p.segs.length && left > 0; i++) {
+        var t = Math.min(1, left / p.segs[i]), a = p.pts[i], b = p.pts[i + 1];
+        c.lineTo(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t); left -= p.segs[i];
+      }
+      c.stroke();
+    }
+    function gatePath(c, kind) {
+      c.beginPath();
+      if (kind === "AND") { c.moveTo(0, 0); c.lineTo(14, 0); c.arc(14, 12, 12, -Math.PI / 2, Math.PI / 2); c.lineTo(0, 24); c.closePath(); }
+      else if (kind === "NOT") { c.moveTo(0, 0); c.lineTo(22, 12); c.lineTo(0, 24); c.closePath(); c.moveTo(28.5, 12); c.arc(25.5, 12, 3, 0, Math.PI * 2); }
+      else { c.moveTo(0, 0); c.quadraticCurveTo(24, 0, 32, 12); c.quadraticCurveTo(24, 24, 0, 24); c.quadraticCurveTo(8, 12, 0, 0);
+        if (kind === "XOR") { c.moveTo(-5, 0); c.quadraticCurveTo(3, 12, -5, 24); } }
+    }
+    function outX(kind) { return kind === "AND" ? 26 : kind === "NOT" ? 28.5 : 32; }
+    function evalGate(g) { return g.kind === "AND" ? g.a & g.b : g.kind === "OR" ? g.a | g.b : g.kind === "XOR" ? g.a ^ g.b : 1 - g.a; }
+
+    function drawArt(c, alpha) {
+      c.save(); c.globalAlpha = alpha; c.lineWidth = 1; c.font = "500 9px 'JetBrains Mono', monospace"; c.textBaseline = "middle";
+      art.forEach(function (a) {
+        c.strokeStyle = SILK; c.fillStyle = COPPER;
+        if (a.t === "R") { c.fillRect(a.x, a.y + 7, 7, 8); c.fillRect(a.x + 37, a.y + 7, 7, 8); c.strokeRect(a.x + 10, a.y + 5, 24, 12); c.fillStyle = SILK_TXT; c.fillText(a.label, a.x + 10, a.y - 3); }
+        else if (a.t === "C") { c.fillRect(a.x, a.y + 9, 9, 8); c.fillRect(a.x + 21, a.y + 9, 9, 8); c.beginPath(); c.moveTo(a.x + 13, a.y + 5); c.lineTo(a.x + 13, a.y + 21); c.moveTo(a.x + 17, a.y + 5); c.lineTo(a.x + 17, a.y + 21); c.stroke(); c.fillStyle = SILK_TXT; c.fillText(a.label, a.x, a.y - 3); }
+        else if (a.t === "U") { c.strokeRect(a.x + 8, a.y + 6, 36, 28); c.beginPath(); c.arc(a.x + 14, a.y + 12, 2, 0, 6.29); c.stroke(); for (var i = 0; i < 4; i++) { c.fillRect(a.x, a.y + 9 + i * 7, 6, 3); c.fillRect(a.x + 46, a.y + 9 + i * 7, 6, 3); } c.fillStyle = SILK_TXT; c.fillText(a.label, a.x + 8, a.y - 3); }
+        else if (a.t === "F") { c.beginPath(); c.arc(a.x, a.y, 7, 0, 6.29); c.stroke(); c.beginPath(); c.arc(a.x, a.y, 3, 0, 6.29); c.fill(); }
+      });
+      gates.forEach(function (g) {
+        c.save(); c.translate(g.x, g.y); c.strokeStyle = SILK; c.lineWidth = 1.2; gatePath(c, g.kind); c.stroke();
+        c.fillStyle = SILK_TXT; c.fillText(g.kind, 0, -9); c.restore();
+      });
+      /* mounting holes and board marking */
+      [[22, 82], [W - 22, 82], [22, H - 140], [W - 22, H - 140]].forEach(function (h) {
+        c.strokeStyle = COPPER; c.lineWidth = 3; c.beginPath(); c.arc(h[0], h[1], 8, 0, 6.29); c.stroke();
+      });
+      var cb = $("#chipWrap").getBoundingClientRect();
+      if (W > 820 && cb.bottom < H - 130) {
+        c.fillStyle = SILK_TXT; c.font = "500 9.5px 'JetBrains Mono', monospace"; c.textAlign = "right";
+        c.fillText("RPD-2026  REV A  ·  DESIGNED IN BAGUIO CITY  ·  CC1 / BITWISE + LOGIC", W - 40, H - 112);
+        c.textAlign = "left";
+      }
+      c.restore();
+    }
+    function drawTraces(c, progress) {
+      c.lineCap = "round"; c.lineJoin = "round";
+      paths.forEach(function (p) {
+        c.strokeStyle = "rgba(" + P.trace + "," + (p.bg ? 0.08 : 0.26) + ")"; c.lineWidth = p.bg ? 1.2 : 1.6;
+        strokePath(c, p, p.len * progress);
+        if (p.via && progress >= 1) { var e = p.pts[p.pts.length - 1]; c.beginPath(); c.arc(e[0], e[1], p.bg ? 2.6 : 3.4, 0, Math.PI * 2); c.stroke(); }
+      });
+    }
+    function bake() {
+      cache = document.createElement("canvas"); cache.width = W * DPR; cache.height = H * DPR;
+      var c = cache.getContext("2d"); c.setTransform(DPR, 0, 0, DPR, 0, 0); drawTraces(c, 1); drawArt(c, 1);
+    }
+
+    /* ---------- lightning ---------- */
+    function bolt(a, b, rough) {
+      var pts = [a, b];
+      for (var it = 0; it < 6; it++) {
+        var next = [pts[0]];
+        for (var i = 1; i < pts.length; i++) {
+          var p = pts[i - 1], q = pts[i], dx = q[0] - p[0], dy = q[1] - p[1], len = Math.hypot(dx, dy);
+          var off = (Math.random() - 0.5) * len * rough;
+          next.push([(p[0] + q[0]) / 2 - dy / len * off, (p[1] + q[1]) / 2 + dx / len * off], q);
+        }
+        pts = next;
+      }
+      return pts;
+    }
+    function strike(x, y) {
+      var best = pins[0], bd = 1e9;
+      pins.forEach(function (p) { var d = Math.hypot(p[0] - x, p[1] - y); if (d < bd) { bd = d; best = p; } });
+      var main = bolt(best, [x, y], 0.32), branches = [];
+      for (var k = 0; k < 2; k++) {
+        var from = main[Math.floor(main.length * (0.3 + Math.random() * 0.4))];
+        var ang = Math.atan2(y - best[1], x - best[0]) + (Math.random() - 0.5) * 1.6, l = 40 + Math.random() * 90;
+        branches.push(bolt(from, [from[0] + Math.cos(ang) * l, from[1] + Math.sin(ang) * l], 0.4));
+      }
+      arcs.push({ lines: [main].concat(branches), born: performance.now() });
+      chipPaths.forEach(function (p) { pulses.push({ p: p, d: 0, v: 420 + Math.random() * 300 }); });
+      speed = Math.min(1, speed + 0.9);
+      var chip = $("#chip"); chip.classList.add("zap"); setTimeout(function () { chip.classList.remove("zap"); }, 220);
+      zapSound();
+    }
+    function drawArcs(now) {
+      arcs = arcs.filter(function (a) {
+        var age = (now - a.born) / 320; if (age >= 1) return false;
+        var al = Math.pow(1 - age, 1.6);
+        a.lines.forEach(function (pts, i) {
+          [[9, 0.12], [3.5, 0.45], [1.3, 1]].forEach(function (s) {
+            ctx.lineWidth = s[0] * (i ? 0.6 : 1); ctx.strokeStyle = s[1] === 1 ? "rgba(" + P.arcCore + "," + al + ")" : "rgba(" + P.arcGlow + "," + (s[1] * al) + ")";
+            ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (var k = 1; k < pts.length; k++) ctx.lineTo(pts[k][0], pts[k][1]); ctx.stroke();
+          });
+        });
+        return true;
+      });
+    }
+
+    /* ---------- live layer ---------- */
+    var lastSpawn = 0, lastFrame = 0;
+    function drawBoard(now) {
+      var dt = Math.min(0.05, (now - (lastFrame || now)) / 1000); lastFrame = now;
+      var oc = ocStart ? clamp((now - ocStart) / 600, 0, 1) : 0;
+      ctx.clearRect(0, 0, W, H);
+      var t = now - T0, prog = TRACE_MS ? clamp(t / TRACE_MS, 0, 1) : 1; prog = 1 - Math.pow(1 - prog, 3);
+
+      /* dust motes (behind everything) */
+      var ox = pointer ? (pointer[0] / W - 0.5) : 0, oy = pointer ? (pointer[1] / H - 0.5) : 0;
+      motes.forEach(function (m) {
+        if (!reduce) { m.y -= m.s * m.z * dt * 14; m.x += Math.sin(now / 2400 + m.ph) * dt * 4; if (m.y < -10) { m.y = H + 10; m.x = Math.random() * W; } }
+        var x = m.x - ox * 26 * m.z, y = m.y - oy * 18 * m.z;
+        ctx.fillStyle = "rgba(" + P.ink + "," + (0.05 + m.z * 0.12) + ")";
+        ctx.beginPath(); ctx.arc(x, y, 0.6 + m.z * 1.3, 0, 6.29); ctx.fill();
+      });
+
+      if (prog < 1) { drawTraces(ctx, prog); drawArt(ctx, prog * prog); return; }
+      if (!cache) bake();
+      ctx.drawImage(cache, 0, 0, W, H);
+
+      if (pointer && !touch) { /* inspection light */
+        ctx.save(); ctx.beginPath(); ctx.arc(pointer[0], pointer[1], 180, 0, Math.PI * 2); ctx.clip();
+        ctx.globalAlpha = 0.9; ctx.drawImage(cache, 0, 0, W, H); ctx.restore();
+      }
+
+      /* live logic gates */
+      ctx.save(); ctx.font = "500 9px 'JetBrains Mono', monospace"; ctx.textBaseline = "middle";
+      gates.forEach(function (g) {
+        if (!reduce && now > g.next) { g.next = now + g.period / (1 + oc * 14); if (Math.random() < 0.5) g.a ^= 1; else g.b ^= 1; }
+        var out = evalGate(g), ox2 = outX(g.kind), on = P.goldOn, off = "rgba(" + P.ink + ",0.2)";
+        ctx.save(); ctx.translate(g.x, g.y); ctx.lineWidth = 1.4;
+        ctx.strokeStyle = g.a ? on : off; ctx.beginPath(); ctx.moveTo(-16, g.kind === "NOT" ? 12 : 6); ctx.lineTo(g.kind === "XOR" ? -3 : 1, g.kind === "NOT" ? 12 : 6); ctx.stroke();
+        if (g.kind !== "NOT") { ctx.strokeStyle = g.b ? on : off; ctx.beginPath(); ctx.moveTo(-16, 18); ctx.lineTo(g.kind === "XOR" ? -3 : 1, 18); ctx.stroke(); }
+        ctx.strokeStyle = out ? on : off; ctx.beginPath(); ctx.moveTo(ox2, 12); ctx.lineTo(ox2 + 14, 12); ctx.stroke();
+        ctx.fillStyle = out ? P.goldFill : "rgba(" + P.ink + ",0.16)";
+        if (out) { ctx.shadowColor = "rgba(217,173,79,0.9)"; ctx.shadowBlur = 12; }
+        ctx.beginPath(); ctx.arc(ox2 + 19, 12, 3.4, 0, 6.29); ctx.fill(); ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(" + P.ink + ",0.5)";
+        ctx.fillText(g.kind === "NOT" ? g.a + " → " + out : g.a + " " + g.b + " → " + out, -16, 32);
+        ctx.restore();
+      });
+      ctx.restore();
+
+      /* pulses (when the visitor presses Enter, the whole board overclocks) */
+      if (oc) { speed = 1; if (Math.random() < 0.5) { var ch = $("#chip"); ch.classList.toggle("zap"); } }
+      if (!reduce && now - lastSpawn > 380 * (1 - oc * 0.97)) { lastSpawn = now; for (var sp = 0; sp < 1 + oc * 6; sp++) pulses.push({ p: chipPaths[Math.floor(Math.random() * chipPaths.length)], d: 0, v: (240 + Math.random() * 260) * (1 + oc * 4) }); }
+      pulses = pulses.filter(function (q) {
+        q.d += q.v * dt; if (q.d > q.p.len + 50) return false;
+        for (var k = 0; k < 8; k++) {
+          var pos = pointAt(q.p, clamp(q.d - k * 6, 0, q.p.len));
+          ctx.fillStyle = "rgba(" + P.gold + "," + (0.85 - k * 0.1) + ")";
+          ctx.beginPath(); ctx.arc(pos[0], pos[1], 2.6 - k * 0.28, 0, Math.PI * 2); ctx.fill();
+        }
+        return true;
+      });
+      drawArcs(now);
+      ctx.globalCompositeOperation = "source-over";
+
+      /* oscilloscope */
+      speed = Math.max(0, speed - dt * 0.9);
+      var y0 = H - 92, x0 = 40, x1 = W - 40, amp = 5 + speed * 22 + oc * 30;
+      ctx.strokeStyle = "rgba(" + P.ink + ",0.08)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); ctx.stroke();
+      ctx.strokeStyle = "rgba(" + P.ink + "," + (0.3 + speed * 0.4) + ")"; ctx.lineWidth = 1.4; ctx.beginPath();
+      for (var xx = x0; xx <= x1; xx += 3) {
+        var ph = (xx - x0) / (46 - oc * 38) - now / (260 - oc * 230), sq = Math.sin(ph) > 0 ? 1 : -1;
+        var yy = y0 - (sq * 0.55 + Math.sin(ph * 3.1 + now / 900) * 0.45) * amp * (0.55 + 0.45 * Math.sin((xx - x0) / (x1 - x0) * Math.PI));
+        if (xx === x0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      if (W > 820) { ctx.fillStyle = "rgba(" + P.ink + ",0.4)"; ctx.font = "500 9px 'JetBrains Mono', monospace"; ctx.fillText("CH1 · CLK · 1V/div", x0, y0 - 18); }
+    }
+
+    /* ================= portrait: binary -> photo ================= */
+    var pc = $("#portrait"), px = pc.getContext("2d"), img = new Image();
+    var COLS = 46, lum = null, bits = [], reveal = [], lens = null, portraitDirty = true, portraitReady = false;
+    var PSTART = reduce ? 0 : 900, PSPAN = reduce ? 0 : 1700;
+    img.onload = function () {
+      var o = document.createElement("canvas"); o.width = o.height = COLS;
+      var oc = o.getContext("2d"); oc.drawImage(img, 0, 0, COLS, COLS); var vals = [];
+      try { var data = oc.getImageData(0, 0, COLS, COLS).data; for (var i = 0; i < COLS * COLS; i++) vals.push((0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2]) / 255); }
+      catch (e) { for (var j = 0; j < COLS * COLS; j++) vals.push(0.6); }
+      var median = vals.slice().sort()[Math.floor(vals.length / 2)], R = rng(7), max = Math.hypot(COLS / 2, COLS / 2);
+      lum = vals;
+      for (var k = 0; k < COLS * COLS; k++) {
+        bits.push(vals[k] > median ? 1 : 0);
+        reveal.push((Math.hypot(k % COLS - COLS / 2, Math.floor(k / COLS) - COLS / 2) / max) * PSPAN * 0.75 + R() * PSPAN * 0.25);
+      }
+      portraitReady = true; portraitDirty = true;
+    };
+    img.onerror = function () { document.documentElement.classList.add("no-canvas"); };
+    img.src = "photo.jpg";
+    function drawPortrait(now) {
+      var s = pc.clientWidth; if (!s) return;
+      if (pc.width !== Math.round(s * DPR)) pc.width = pc.height = Math.round(s * DPR);
+      px.setTransform(DPR, 0, 0, DPR, 0, 0);
+      var t = now - T0, cell = s / COLS, anyHidden = false, lr = s * 0.2;
+      px.drawImage(img, 0, 0, s, s);
+      px.font = "500 " + (cell * 1.02).toFixed(2) + "px 'JetBrains Mono', monospace"; px.textAlign = "center"; px.textBaseline = "middle";
+      for (var i = 0; i < COLS * COLS; i++) {
+        var x = i % COLS, y = Math.floor(i / COLS), cx = (x + 0.5) * cell, cy = (y + 0.5) * cell;
+        var hidden = t < PSTART + reveal[i], dl = lens ? Math.hypot(cx - lens[0], cy - lens[1]) : 1e9, inLens = dl < lr;
+        if (hidden) anyHidden = true;
+        if (!hidden && !inLens) continue;
+        var b = bits[i]; if (inLens && Math.random() < 0.05) b = 1 - b;
+        px.fillStyle = "#060a08"; px.fillRect(x * cell, y * cell, cell + 0.6, cell + 0.6);
+        var a = 0.18 + 0.82 * lum[i]; if (inLens && !hidden) a *= 1 - Math.pow(dl / lr, 3) * 0.6;
+        px.fillStyle = "rgba(214,169,92," + a.toFixed(3) + ")"; px.fillText(b ? "1" : "0", cx, cy + cell * 0.04);
+      }
+      if (lens) { px.strokeStyle = "rgba(246,220,162,0.6)"; px.lineWidth = 1; px.beginPath(); px.arc(lens[0], lens[1], lr, 0, 6.29); px.stroke(); }
+      portraitDirty = anyHidden || !!lens;
+    }
+    var die = $("#die");
+    die.addEventListener("pointermove", function (e) { var r = pc.getBoundingClientRect(); lens = [e.clientX - r.left, e.clientY - r.top]; portraitDirty = true; hideHint(); });
+    die.addEventListener("pointerleave", function () { lens = null; portraitDirty = true; });
+
+    /* ================= name: decode from binary ================= */
+    var chars = [], lines = document.querySelectorAll(".name .line");
+    lines.forEach(function (line) {
+      line.dataset.word.split("").forEach(function (ch) {
+        if (ch === " ") { line.appendChild(document.createTextNode(" ")); return; }
+        var code = ch.charCodeAt(0), bin = code.toString(2).padStart(8, "0");
+        var s = document.createElement("span"); s.className = "ch";
+        s.dataset.bin = ch + " · 0x" + code.toString(16).toUpperCase() + " · " + bin.slice(0, 4) + " " + bin.slice(4);
+        s.innerHTML = '<span class="glyph"></span><span class="scr">0</span>'; s.firstChild.textContent = ch;
+        line.appendChild(s); chars.push(s);
+      });
+    });
+    var NSTART = reduce ? 0 : 1300, nameTimes = chars.map(function (_, i) { return NSTART + i * 75 + Math.random() * 160; }), lastScr = 0, nameDone = false, charRects = [];
+    function tickName(now) {
+      if (nameDone || now - lastScr < 55) return; lastScr = now;
+      var t = now - T0, done = true;
+      chars.forEach(function (c, i) {
+        if (c.classList.contains("on")) return; done = false;
+        if (t >= nameTimes[i] + 420) { c.classList.add("on"); tone(520 + i * 40, 0.03, 0.02); }
+        else if (t >= nameTimes[i]) c.lastChild.textContent = Math.random() < 0.5 ? "0" : "1";
+      });
+      if (done) { nameDone = true; lines[1].classList.add("metal"); measureChars(); }
+    }
+    function measureChars() { charRects = chars.map(function (c) { var r = c.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }); }
+    function magnet() { /* letters lean toward the cursor */
+      if (!nameDone || touch || reduce) return;
+      chars.forEach(function (c, i) {
+        var r = charRects[i]; if (!r) return;
+        if (!pointer) { c.style.transform = ""; return; }
+        var dx = pointer[0] - r[0], dy = pointer[1] - r[1], d = Math.hypot(dx, dy), f = clamp(1 - d / 170, 0, 1);
+        c.style.transform = f ? "translate(" + (dx / d * 7 * f).toFixed(1) + "px," + (dy / d * 7 * f - 4 * f).toFixed(1) + "px)" : "";
+      });
+    }
+
+    /* ================= chip tilt, parallax, probe ================= */
+    var tiltEl = $("#tilt"), chipEl = $("#chip"), ident = $("#identity"), probe = $("#probe"), probeRead = $("#probeRead");
+    var rx = 0, ry = 0, ix = 0, iy = 0, prx = -100, pry = -100;
+    function motion() {
+      if (reduce) return;
+      var cr = chipEl.getBoundingClientRect(), tx = 0, ty = 0, mx = 30, my = 20;
+      if (pointer) {
+        tx = clamp((pointer[0] - (cr.left + cr.width / 2)) / (W / 2), -1, 1); ty = clamp((pointer[1] - (cr.top + cr.height / 2)) / (H / 2), -1, 1);
+        mx = clamp((pointer[0] - cr.left) / cr.width * 100, -20, 120); my = clamp((pointer[1] - cr.top) / cr.height * 100, -20, 120);
+      }
+      rx += (-ty * 9 - rx) * 0.08; ry += (tx * 11 - ry) * 0.08;
+      tiltEl.style.setProperty("--rx", rx.toFixed(2) + "deg"); tiltEl.style.setProperty("--ry", ry.toFixed(2) + "deg");
+      chipEl.style.setProperty("--mx", mx.toFixed(0) + "%"); chipEl.style.setProperty("--my", my.toFixed(0) + "%");
+      var gx = pointer ? (pointer[0] / W - 0.5) : 0, gy = pointer ? (pointer[1] / H - 0.5) : 0;
+      ix += (gx * -10 - ix) * 0.06; iy += (gy * -8 - iy) * 0.06;
+      ident.style.transform = "translate3d(" + ix.toFixed(2) + "px," + iy.toFixed(2) + "px,0)";
+      if (pointer && !touch) {
+        prx += (pointer[0] - prx) * 0.35; pry += (pointer[1] - pry) * 0.35;
+        probe.style.transform = "translate3d(" + prx.toFixed(1) + "px," + pry.toFixed(1) + "px,0)";
+        probeRead.textContent = "X:0x" + Math.round(pointer[0]).toString(16).toUpperCase().padStart(3, "0") + "  Y:0x" + Math.round(pointer[1]).toString(16).toUpperCase().padStart(3, "0");
+      }
+    }
+
+    /* ================= input ================= */
+    var hint = $("#hint"), lastMove = null;
+    function hideHint() { hint.classList.add("gone"); }
+    document.addEventListener("pointermove", function (e) {
+      if (lastMove) speed = Math.min(1, speed + Math.hypot(e.clientX - lastMove[0], e.clientY - lastMove[1]) / 2200);
+      lastMove = [e.clientX, e.clientY]; pointer = [e.clientX, e.clientY];
+      if (live) probe.classList.add("on");
+      probe.classList.toggle("hot", !!(e.target.closest && e.target.closest("a, button, .die, .ch")));
+    }, { passive: true });
+    document.documentElement.addEventListener("pointerleave", function () { pointer = null; probe.classList.remove("on"); });
+    document.addEventListener("click", function (e) {
+      if (!live || ocStart || e.target.closest("a, button")) return;
+      var r = document.createElement("i"); r.className = "ripple"; r.style.left = e.clientX + "px"; r.style.top = e.clientY + "px";
+      document.body.appendChild(r); setTimeout(function () { r.remove(); }, 750);
+      if (!reduce) strike(e.clientX, e.clientY);
+      hideHint();
+    });
+
+    /* ================= enter: overclock, dive into the chip, follow the signal ================= */
+    var enterBtn = $("#enter"), ocStart = 0;
+    function enter() {
+      if (window.Warp) window.Warp.go("personal-info.html", { from: enterBtn });
+      else location.href = "personal-info.html";
+    }
+    enterBtn.addEventListener("click", enter);
+    addEventListener("warp:out", function () { ocStart = performance.now(); probe.classList.remove("on"); document.body.classList.add("warping"); });
+    document.addEventListener("keydown", function (e) {
+      if (live && e.key === "Enter" && document.activeElement === document.body) { e.preventDefault(); enter(); }
+    });
+
+    /* ================= main loop ================= */
+    var flags = { chip: false, ready: false }, READY_AT = 2300;
+    function frame(now) {
+      var t = now - T0;
+      if (!flags.chip && t > (reduce ? 0 : 400)) { document.body.classList.add("chip-on"); flags.chip = true; }
+      if (!flags.ready && t > (reduce ? 0 : READY_AT)) { document.body.classList.add("ready"); flags.ready = true; }
+      drawBoard(now);
+      if (portraitReady && (portraitDirty || t < PSTART + PSPAN + 100)) drawPortrait(now);
+      tickName(now); motion(); magnet();
+      requestAnimationFrame(frame);
+    }
+    function goLive(fromIntro) {
+      if (live) return; live = true;
+      build(); T0 = performance.now();
+      if (seen && !reduce) { document.body.classList.add("chip-on"); flags.chip = true; PSTART = 0; READY_AT = 900; }
+      if (reduce) { /* reduced motion: show the finished state at once */
+        document.body.classList.add("chip-on", "ready"); flags.chip = flags.ready = true;
+        chars.forEach(function (c) { c.classList.add("on"); }); nameDone = true; lines[1].classList.add("metal"); measureChars();
+      } else if (fromIntro) {
+        /* the bits already assembled the name and the binary portrait: lock them in */
+        document.body.classList.add("chip-on"); flags.chip = true;
+        chars.forEach(function (c, i) { setTimeout(function () { c.classList.add("on"); }, i * 18); });
+        PSTART = 350; READY_AT = 1100;
+        [120, 330, 560].forEach(function (d, k) {
+          setTimeout(function () {
+            var a = Math.random() * Math.PI * 2, r = Math.max(W, H) * 0.42;
+            var cr = $("#chip").getBoundingClientRect(), cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
+            strike(clamp(cx + Math.cos(a) * r, 20, W - 20), clamp(cy + Math.sin(a) * r, 20, H - 20));
+          }, d);
+        });
+      }
+      requestAnimationFrame(frame);
+    }
+    addEventListener("pageshow", function (e) {
+      if (!e.persisted) return;
+      ocStart = 0; document.body.classList.remove("warping");
+      chars.forEach(function (c) { c.style.transform = ""; });
+      lines[1].classList.remove("metal"); requestAnimationFrame(function () { lines[1].classList.add("metal"); });
+    });
+    addEventListener("resize", function () { if (!live) return; build(); measureChars(); portraitDirty = true; });
+
+    /* ================= intro: one bit -> 4,096 bits -> one person ================= */
+    var intro = $("#intro"), seen = document.documentElement.classList.contains("warp-in");
+
+    function sprite(ch) { /* pre-rendered glowing digit, drawn scaled for speed */
+      var c = document.createElement("canvas"); c.width = c.height = 48;
+      var g = c.getContext("2d"); g.font = "600 34px 'JetBrains Mono', monospace"; g.textAlign = "center"; g.textBaseline = "middle";
+      g.shadowColor = ch === "1" ? P.oneSh : "rgba(0,0,0,0.18)"; g.shadowBlur = ch === "1" ? 8 : 3; g.fillStyle = ch === "1" ? P.one : P.zero; g.fillText(ch, 24, 26);
+      return c;
+    }
+    function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+    function easeInOut(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+    function fmt(n) { return n.toLocaleString("en-US"); }
+
+    function runIntro() {
+      if (reduce || seen) { intro.style.display = "none"; goLive(false); return; }
+      var cvI = $("#introCv"), gI = cvI.getContext("2d"), D = Math.min(2, devicePixelRatio || 1);
+      var IW = innerWidth, IH = innerHeight;
+      cvI.width = IW * D; cvI.height = IH * D; gI.setTransform(D, 0, 0, D, 0, 0);
+      var S0 = sprite("0"), S1 = sprite("1");
+
+      /* targets: every cell of the binary portrait ... */
+      var P = [], dr = $("#die").getBoundingClientRect(), cell = dr.width / COLS;
+      for (var i = 0; i < COLS * COLS; i++) {
+        P.push({ tx: dr.left + (i % COLS + 0.5) * cell, ty: dr.top + (Math.floor(i / COLS) + 0.5) * cell, d: bits[i], a: 0.18 + 0.82 * lum[i], sz: cell * 1.25, name: false });
+      }
+      /* ... plus points sampled from the shapes of the letters of the name */
+      var off = document.createElement("canvas"); off.width = IW; off.height = IH;
+      var og = off.getContext("2d"); og.fillStyle = "#fff"; og.textAlign = "center"; og.textBaseline = "middle";
+      chars.forEach(function (c) {
+        var r = c.getBoundingClientRect(), cs = getComputedStyle(c);
+        og.font = cs.fontStyle + " 400 " + cs.fontSize + " 'Instrument Serif', Georgia, serif";
+        og.fillText(c.firstChild.textContent, r.left + r.width / 2, r.top + r.height * 0.52);
+      });
+      var nameSize = parseFloat(getComputedStyle(chars[0]).fontSize), step = Math.max(3, Math.round(nameSize / 34));
+      var data = og.getImageData(0, 0, IW, IH).data, namePts = [];
+      for (var y = 0; y < IH; y += step) for (var x = 0; x < IW; x += step) if (data[(y * IW + x) * 4 + 3] > 140) namePts.push([x, y]);
+      var cap = touch ? 1100 : 2600;
+      for (var k = namePts.length - 1; k > 0; k--) { var j = Math.floor(Math.random() * (k + 1)); var tmp = namePts[k]; namePts[k] = namePts[j]; namePts[j] = tmp; }
+      namePts.slice(0, cap).forEach(function (p) { P.push({ tx: p[0], ty: p[1], d: Math.random() < 0.5 ? 1 : 0, a: 0.95, sz: Math.max(5, step * 1.9), name: true }); });
+
+      /* shuffle so each bit crosses the screen on its way home */
+      for (var m = P.length - 1; m > 0; m--) { var n2 = Math.floor(Math.random() * (m + 1)); var t2 = P[m]; P[m] = P[n2]; P[n2] = t2; }
+      var N = P.length, cx = IW / 2, cy = IH / 2, RAD = Math.min(IW, IH) * 0.46, LV = Math.ceil(Math.log2(N + 1));
+      P.forEach(function (p, i) {
+        p.r = RAD * Math.sqrt((i + 0.5) / N); p.th = i * 2.399963229728653; /* golden angle */
+        p.lvl = Math.floor(Math.log2(i + 1)); p.delay = Math.random() * 420; p.curve = (Math.random() - 0.5) * 220; p.flip = Math.random();
+      });
+
+      var SPLIT = 650, LEVEL_MS = 75, GROW = 620, CONV = SPLIT + LV * LEVEL_MS + GROW + 450, FLY = 1000, LAND = CONV + 420 + FLY + 40;
+      var capMain = $("#capMain"), capSub = $("#capSub"), tcode = $("#tcode"), I0 = performance.now(), landed = false, landT = 0, lastCap = "";
+
+      function phyllo(p, t) {
+        var rot = (t - SPLIT) * 0.00022, grow = easeOut(clamp((t - SPLIT - p.lvl * LEVEL_MS) / GROW, 0, 1));
+        var breathe = 1 + 0.035 * Math.sin(t / 280 + p.th);
+        return [cx + Math.cos(p.th + rot) * p.r * grow * breathe, cy + Math.sin(p.th + rot) * p.r * grow * breathe];
+      }
+      function setCap(main, sub) { if (main + sub === lastCap) return; lastCap = main + sub; capMain.innerHTML = main; capSub.textContent = sub; }
+
+      function draw(now) {
+        var t = now - I0;
+        gI.clearRect(0, 0, IW, IH);
+        tcode.textContent = "T+" + (Math.min(t, LAND) / 1000).toFixed(3) + "s";
+        gI.globalCompositeOperation = "source-over";
+
+        if (t < SPLIT) { /* one bit, breathing */
+          var pulse = 1 + 0.18 * Math.sin(t / 90), sz = 30 * pulse * easeOut(clamp(t / 260, 0, 1));
+          gI.globalAlpha = 1; gI.drawImage(S1, cx - sz, cy - sz, sz * 2, sz * 2);
+          var halo = gI.createRadialGradient(cx, cy, 0, cx, cy, 90 * pulse);
+          halo.addColorStop(0, "rgba(217,173,79,0.35)"); halo.addColorStop(1, "rgba(217,173,79,0)");
+          gI.fillStyle = halo; gI.fillRect(cx - 100, cy - 100, 200, 200);
+          setCap("1", "bit");
+        } else {
+          var born = 0;
+          for (var i = 0; i < N; i++) {
+            var p = P[i];
+            if (t < SPLIT + p.lvl * LEVEL_MS) continue;
+            born++;
+            var pos = phyllo(p, t), x = pos[0], y = pos[1], size = 9, alpha = 0.9, digit = (p.flip + t / 400) % 1 < 0.5 ? 1 : 0;
+            if (t > CONV) {
+              var e = easeInOut(clamp((t - CONV - p.delay) / FLY, 0, 1));
+              var dx = p.tx - x, dy = p.ty - y, len = Math.hypot(dx, dy) || 1, bend = Math.sin(Math.PI * e) * p.curve;
+              x = x + dx * e - dy / len * bend; y = y + dy * e + dx / len * bend;
+              size = 9 + (p.sz - 9) * e; alpha = 0.9 + (p.a - 0.9) * e;
+              if (e > 0.85) digit = p.d;
+            }
+            if (landed) alpha *= clamp(1 - (now - landT) / 520, 0, 1);
+            gI.globalAlpha = alpha;
+            gI.drawImage(digit ? S1 : S0, x - size / 2, y - size / 2, size, size);
+          }
+          if (t < CONV) {
+            var shown = Math.min(N, Math.pow(2, Math.floor((t - SPLIT) / LEVEL_MS) + 1) - 1);
+            setCap(fmt(shown), shown === 1 ? "bit" : "bits");
+          } else if (t < CONV + FLY) setCap(fmt(N) + " bits", "assembling");
+          else setCap("1 <i>person.</i>", "Rowan P. Dogwe");
+        }
+        gI.globalAlpha = 1; gI.globalCompositeOperation = "source-over";
+
+        if (!landed && t >= LAND) land(now);
+        if (landed && now - landT > 700) { intro.classList.add("gone"); setTimeout(function () { intro.style.display = "none"; }, 750); return; }
+        requestAnimationFrame(draw);
+      }
+      function land(now) {
+        landed = true; landT = now;
+        intro.classList.add("land");
+        var cr = $("#chip").getBoundingClientRect(), f = $("#flash");
+        f.style.setProperty("--fx", ((cr.left + cr.width / 2) / IW * 100) + "%"); f.style.setProperty("--fy", ((cr.top + cr.height / 2) / IH * 100) + "%");
+        f.classList.add("go");
+        goLive(true);
+      }
+      function skip() { if (landed) return; var t = performance.now() - I0; if (t < LAND - 60) I0 -= (LAND - 60 - t); }
+      intro.addEventListener("click", skip);
+      addEventListener("keydown", function k() { skip(); removeEventListener("keydown", k); });
+      requestAnimationFrame(draw);
+    }
+
+    var started = false;
+    function begin() {
+      if (started) return;
+      if (!portraitReady && !document.documentElement.classList.contains("no-canvas")) { setTimeout(begin, 60); return; }
+      started = true;
+      if (!portraitReady) { intro.style.display = "none"; goLive(false); return; }
+      runIntro();
+    }
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(begin); setTimeout(begin, 1800); } else begin();
+  })();
+  </script>
+  <script src="warp.js"></script>
+  <noscript><style>#intro{display:none}.chip-wrap,.bar,.kicker,.role,.actions{opacity:1!important;transform:none!important}.die img{opacity:1!important}</style><p style="position:fixed;left:7vw;top:40vh;z-index:9;font:400 64px Georgia,serif">Rowan P. Dogwe</p></noscript>
 </body>
 </html>

@@ -1,0 +1,62 @@
+/* ==========================================================================
+   warp.css: theme switch + "follow the signal" page transition (all pages)
+   ========================================================================== */
+:root { --warp-bg: #fbfaf6; --warp-ink: #111111; --warp-dim: rgba(17, 17, 17, 0.55); --warp-gold: #b08327; color-scheme: light; }
+:root[data-theme="dark"] { --warp-bg: #0b0b0c; --warp-ink: #f2ede2; --warp-dim: rgba(242, 237, 226, 0.55); --warp-gold: #e2bb62; color-scheme: dark; }
+
+/* arriving through a warp: paint the board colour before anything renders */
+html.warp-in, html.warp-in body { background: var(--warp-bg) !important; }
+html.warp-in body > * { visibility: hidden; }
+
+/* theme switch: a circle that grows out of the button (where supported) */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+.theme-btn {
+  display: inline-flex; align-items: center; gap: 9px; cursor: pointer;
+  font: 600 11px "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--warp-ink); background: color-mix(in srgb, var(--warp-bg) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warp-ink) 30%, transparent); border-radius: 999px; padding: 8px 14px 8px 10px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.theme-btn:hover { border-color: var(--warp-gold); transform: translateY(-1px); }
+.theme-btn .ico { position: relative; width: 16px; height: 16px; border-radius: 50%; background: var(--warp-ink); overflow: hidden; transition: transform 0.5s cubic-bezier(.2, .8, .2, 1); }
+.theme-btn .ico::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; top: -3px; right: -3px; background: var(--warp-bg); transition: transform 0.5s cubic-bezier(.2, .8, .2, 1); transform: translate(10px, -10px); }
+:root[data-theme="dark"] .theme-btn .ico { background: var(--warp-gold); }
+:root[data-theme="dark"] .theme-btn .ico::after { transform: none; }
+
+/* the chip a signal is leaving from glows for a moment */
+.warp-src { box-shadow: 0 0 0 2px rgba(217, 173, 79, 0.9), 0 0 40px rgba(217, 173, 79, 0.55) !important; transition: box-shadow 0.3s ease; }
+
+/* ---------- overlay ---------- */
+#warp {
+  position: fixed; inset: 0; z-index: 2147483000; pointer-events: none;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; color: var(--warp-ink);
+  -webkit-font-smoothing: antialiased;
+}
+#warp.block { pointer-events: auto; cursor: progress; }
+#warp canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.whud { position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s ease; }
+.whud.on { opacity: 1; }
+.whud .w-row { position: absolute; left: clamp(18px, 4vw, 48px); right: clamp(18px, 4vw, 48px); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }
+.whud .w-top { top: 22px; }
+.whud .w-bot { bottom: 22px; align-items: flex-end; }
+.whud .w-dim { color: var(--warp-dim); }
+.whud .w-gold { color: var(--warp-gold); }
+.whud .w-freq { text-align: right; }
+.whud .w-freq b { display: block; font: 500 clamp(24px, 3vw, 40px)/1 "JetBrains Mono", monospace; letter-spacing: 0; color: var(--warp-ink); font-variant-numeric: tabular-nums; }
+.whud .w-freq b small { font-size: 0.42em; letter-spacing: 0.1em; color: var(--warp-gold); margin-left: 6px; }
+.whud .w-dest { position: absolute; left: 0; right: 0; bottom: 12vh; text-align: center; }
+.whud .w-dest span { display: block; font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--warp-gold); }
+.whud .w-dest b { display: block; margin-top: 8px; font: 400 clamp(38px, 5.6vw, 80px)/1 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; color: var(--warp-ink); }
+.whud .w-dest b i { font-style: italic; color: var(--warp-gold); }
+.whud .w-bar { display: block; width: min(240px, 34vw); height: 2px; background: color-mix(in srgb, var(--warp-ink) 14%, transparent); margin-top: 10px; overflow: hidden; }
+.whud .w-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #8a6420, #e2bb62); }
+.whud .w-addr { font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .whud .w-row { font-size: 9.5px; letter-spacing: 0.16em; }
+  .whud .w-hide-sm { display: none; }
+  .whud .w-dest { bottom: 15vh; }
+  .theme-btn .txt { display: none; }
+  .theme-btn { padding: 8px; }
+}
