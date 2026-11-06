@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Personal information of Rowan P. Dogwe, BS Computer Science student at the University of the Cordilleras.">
   <meta name="author" content="Rowan P. Dogwe">
+  <meta name="robots" content="noindex, noarchive">
   <meta name="theme-color" content="#fbfaf6">
   <title>Personal Info | Rowan P. Dogwe</title>
   <script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem("rpd-theme")}catch(e){}d.setAttribute("data-theme",t==="dark"?"dark":"light");try{var w=JSON.parse(sessionStorage.getItem("rpd-warp")||"null"),f=location.pathname.split("/").pop()||"index.html";if(w&&w.to===f&&Date.now()-w.ts<15000&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("warp-in")}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="warp.css">
-  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="warp.css?v=202611062124">
+  <link rel="stylesheet" href="site.css?v=202611062124">
 </head>
 <body data-seed="101">
   <canvas id="bg" aria-hidden="true"></canvas>
@@ -26,8 +27,9 @@
         <nav class="nav" aria-label="Portfolio pages">
           <a href="index.html" data-warp><em>0x00</em><span class="lg">Home</span><span class="sm">Home</span></a>
           <a href="personal-info.html" data-warp aria-current="page"><em>0x01</em><span class="lg">Personal Info</span><span class="sm">Personal</span></a>
-          <a href="education.html" data-warp><em>0x02</em><span class="lg">Education &amp; Achievements</span><span class="sm">Education</span></a>
-          <a href="family.html" data-warp><em>0x03</em><span class="lg">Family</span><span class="sm">Family</span></a>
+          <a href="about.html" data-warp><em>0x02</em><span class="lg">About Me</span><span class="sm">About</span></a>
+          <a href="education.html" data-warp><em>0x03</em><span class="lg">Education &amp; Achievements</span><span class="sm">Education</span></a>
+          <a href="family.html" data-warp><em>0x04</em><span class="lg">Family</span><span class="sm">Family</span></a>
         </nav>
         <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="ico" aria-hidden="true"></span><span class="txt">Dark</span></button>
       </div>
@@ -38,18 +40,24 @@
         <section class="pi-text">
           <span class="kicker" data-boot>0x01 &middot; Personal Info</span>
           <h1 class="pi-name" data-boot data-decode>Rowan Pacha-eo <i>Dogwe</i></h1>
-          <p class="pi-desc" data-boot>First-year Computer Science student and self-supporting working student, building mobile apps and AI systems for clients in New Zealand and the United States.</p>
+          <div class="pi-contact" data-boot>
+            <a class="pi-mail" href="mailto:rowan.p.dogwe@gmail.com"><span>Email</span><b>rowan.p.dogwe@gmail.com</b></a>
+            <a class="pi-mail" data-tel="KzYzOTU2OTE3MTcwNA=="><span>Phone</span><b data-c="MDk1NiA5MTcgMTcwNA==">&middot;&middot;&middot;</b></a>
+            <p class="pi-mail"><span>Address</span><b data-c="NjEzQiBUZW5lcmFjZSwgU2FuIFZpY2VudGUsIEJhZ3VpbyBDaXR5">&middot;&middot;&middot;</b></p>
+          </div>
 
           <dl class="facts">
-            <div class="fact" data-boot><dt>Age</dt><dd>19</dd></div>
-            <div class="fact" data-boot><dt>Birthday</dt><dd class="todo">to be added</dd></div>
-            <div class="fact" data-boot><dt>Citizenship</dt><dd class="todo">to be added</dd></div>
-            <div class="fact w2" data-boot><dt>Course</dt><dd>BS Computer Science</dd></div>
-            <div class="fact" data-boot><dt>Year level</dt><dd>First year</dd></div>
-            <div class="fact w2" data-boot><dt>School</dt><dd>University of the Cordilleras</dd></div>
-            <div class="fact" data-boot><dt>Home</dt><dd>Baguio City</dd></div>
-            <div class="fact w2" data-boot><dt>Email</dt><dd><a href="mailto:rowan.p.dogwe@gmail.com">rowan.p.dogwe@gmail.com</a></dd></div>
-            <div class="fact" data-boot><dt>Hobbies</dt><dd class="todo">to be added</dd></div>
+            <div class="fact c3" data-boot><dt>Birthday</dt><dd>December 31, 2006</dd></div>
+            <div class="fact c2" data-boot><dt>Age</dt><dd data-age="2006-12-31">19</dd></div>
+            <div class="fact c3" data-boot><dt>Citizenship</dt><dd>Filipino</dd></div>
+            <div class="fact c4" data-boot><dt>Location</dt><dd>Baguio City</dd></div>
+
+            <div class="fact c6" data-boot><dt>College</dt><dd>University of the Cordilleras</dd></div>
+            <div class="fact c6" data-boot><dt>Course &amp; year level</dt><dd>BS Computer Science &middot; First year</dd></div>
+
+            <div class="fact c5" data-boot><dt>Skills</dt><dd class="skills"><span>Java</span><span>TypeScript</span><span>JavaScript</span><span>Python</span><span>SQL</span><span>Dart &amp; Flutter</span><span>Next.js &amp; React</span><span>FastAPI</span><span>PostgreSQL</span><span>Git</span></dd></div>
+            <div class="fact c7" data-boot><dt>Hobbies</dt><dd><ul class="hob"><li>Building apps and AI tools</li><li>Animating stickman cartoons</li><li>Making YouTube videos</li><li>Exploring tech and business stories</li></ul></dd></div>
+
           </dl>
         </section>
 
@@ -68,11 +76,11 @@
     <footer class="foot" data-boot>
       <a class="step prev" href="index.html" data-warp>&larr; <em>0x00</em> Home</a>
       <span class="status"><i></i> Signal locked &middot; clk 4.20 GHz</span>
-      <a class="step next" href="education.html" data-warp><em>0x02</em> Education &rarr;</a>
+      <a class="step next" href="about.html" data-warp><em>0x02</em> About me &rarr;</a>
     </footer>
   </div>
 
-  <script src="warp.js"></script>
-  <script src="site.js"></script>
+  <script src="warp.js?v=202611062124"></script>
+  <script src="site.js?v=202611062124"></script>
 </body>
 </html>

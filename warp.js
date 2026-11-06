@@ -21,8 +21,9 @@
   var PAGES = {
     "index.html":         { idx: "0x00", label: "Home",                     html: "Home" },
     "personal-info.html": { idx: "0x01", label: "Personal Info",            html: "Personal <i>Info</i>" },
-    "education.html":     { idx: "0x02", label: "Education & Achievements", html: "Education <i>&amp; Achievements</i>" },
-    "family.html":        { idx: "0x03", label: "Family",                   html: "My <i>Family</i>" }
+    "about.html":         { idx: "0x02", label: "About Me",                 html: "About <i>Me</i>" },
+    "education.html":     { idx: "0x03", label: "Education & Achievements", html: "Education <i>&amp; Achievements</i>" },
+    "family.html":        { idx: "0x04", label: "Family",                   html: "My <i>Family</i>" }
   };
   function fileOf(href) { var p = new URL(href, location.href).pathname.split("/").pop(); return p || "index.html"; }
   function pageOf(href) { return PAGES[fileOf(href)] || { idx: "0x??", label: "Next page", html: "Next page" }; }
@@ -41,6 +42,7 @@
   function eIn(t) { return t * t * t; }
   function eOut(t) { return 1 - Math.pow(1 - t, 3); }
   function eInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function lookAngle(rt, d, ahead) { var p0 = rt.at(d), p1 = rt.at(d + ahead), p2 = rt.at(d + ahead * 2); return Math.atan2((p1.y - p0.y) + (p2.y - p1.y) * 0.6, (p1.x - p0.x) + (p2.x - p1.x) * 0.6); }
   function angTo(a, b, k) { var d = Math.atan2(Math.sin(b - a), Math.cos(b - a)); return a + d * k; }
 
   /* ======================================================================
@@ -113,10 +115,12 @@
     size(); addEventListener("resize", size);
     P = palette(); sprites();
   }
-  function size() { if (!cv) return; D = Math.min(1.75, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); }
+  function size() { if (!cv) return; D = Math.min(1.5, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); }
   function unmount() { if (box) { box.remove(); box = null; } removeEventListener("resize", size); last = {}; }
 
   var last = {};
+  var lastHud = 0;
+  function hudDue(now) { if (now - lastHud < 70) return false; lastHud = now; return true; }
   function setText(k, v, html) { if (last[k] === v) return; last[k] = v; if (html) el[k].innerHTML = v; else el[k].textContent = v; }
   function fmtF(hz) {
     var u = ["Hz", "kHz", "MHz", "GHz", "THz"], i = 0;
@@ -364,8 +368,8 @@
     g.globalAlpha = 1;
     /* the signal's trail */
     var TR = Math.min(1400, 220 + this.v * 0.26) / Math.max(0.6, z), tEnd = Math.min(this.d, this.endD);
-    for (var n = 0; n < 12; n++) {
-      var a0 = Math.max(this.minD, tEnd - TR * (n + 1) / 12), a1 = Math.max(this.minD, tEnd - TR * n / 12), al = Math.pow(1 - n / 12, 1.6);
+    for (var n = 0; n < 8; n++) {
+      var a0 = Math.max(this.minD, tEnd - TR * (n + 1) / 8), a1 = Math.max(this.minD, tEnd - TR * n / 8), al = Math.pow(1 - n / 8, 1.6);
       if (a1 <= a0) continue;
       pathRange(rt, 0, a0, a1);
       g.strokeStyle = "rgba(" + P.trailOut + "," + (0.32 * al) + ")"; g.lineWidth = 12 * al + 2; g.stroke();
@@ -449,7 +453,7 @@
     if (busy) return; opts = opts || {};
     var to = fileOf(href), page = pageOf(href);
     if (reduce) { location.href = href; return; }
-    busy = true;
+    busy = true; window.__warpBusy = true;
     var pre = document.createElement("link"); pre.rel = "prefetch"; pre.href = href; document.head.appendChild(pre);
     mount(); box.classList.add("block"); box.style.background = "transparent"; box.style.opacity = "1";
     var A = anchorEl(opts.from), r = A ? A.getBoundingClientRect() : { left: W / 2 - 30, top: H / 2 - 30, width: 60, height: 60 };
@@ -483,22 +487,26 @@
       }
       /* 3. the signal leaves the pin and the camera follows it */
       var run = clamp((t - CHARGE) / (NAV - CHARGE), 0, 1);
-      world.v = t < CHARGE ? 0 : lerp(90, 4200, Math.pow(run, 1.6));
+      world.v = t < CHARGE ? 0 : lerp(90, 3400, Math.pow(run, 1.5));
       world.d += world.v * dt;
       var hp = world.rt.at(world.d), k = eInOut(clamp((t - CHARGE - 120) / 900, 0, 1));
       world.cam = [lerp(0, hp.x, k), lerp(0, hp.y, k)];
       world.anchor = [lerp(start[0], camFollow[0], k), lerp(start[1], camFollow[1], k)];
       world.z = lerp(1, 0.84, k * run);
-      world.rot = angTo(world.rot, -Math.PI / 2 - hp.a, (1 - Math.pow(0.006, dt)) * k);
+      world.rot = angTo(world.rot, -Math.PI / 2 - lookAngle(world.rt, world.d, 260 + world.v * 0.12), (1 - Math.pow(0.03, dt)) * k);
       world.step(dt, now);
-      world.draw(now, lerp(0.9, 0.3, run));
+      world.draw(now, 1);
+      var bloom = clamp((t - (NAV - 220)) / 220, 0, 1);
+      if (bloom > 0) { g.setTransform(D, 0, 0, D, 0, 0); g.fillStyle = "rgba(" + P.bg + "," + (eIn(bloom) * 0.92) + ")"; g.fillRect(0, 0, W, H); }
 
       var f = t < CHARGE ? 1 : 4.2e9 * Math.pow(10, 1.1 * eIn(run));
+      if (hudDue(now)) {
       setText("freq", t < CHARGE ? fmtF(Math.pow(10, 9.623 * eIn(clamp(t / CHARGE, 0, 1)))) : fmtF(f), true);
       setText("sub", t < CHARGE ? "Charging" : "Signal in transit");
       setText("addr", "ADDR 0x" + ((Math.floor(world.d * 7.31) & 0xffff).toString(16).toUpperCase().padStart(4, "0")));
       el.bar.style.width = (run * 70) + "%";
       setText("label", run < 0.55 ? scramble(page.label, clamp(run / 0.5, 0, 1)) : page.html, run >= 0.55);
+      }
       if (t > 650) hud.classList.add("on");
 
       if (!navd && t > NAV) {
@@ -516,6 +524,7 @@
      plugs into the real chip on this page, at its exact screen position
      ====================================================================== */
   function arrive(state) {
+    window.__warpBusy = true;
     mount(); box.classList.add("block"); box.style.background = "rgb(" + P.bg + ")"; hud.classList.add("on");
     document.body.style.visibility = "hidden"; root.classList.remove("warp-in");
     var page = PAGES[fileOf(location.href)] || pageOf(location.href);
@@ -523,7 +532,7 @@
     var dst = A ? chipFrom(A, r) : chipFrom(document.body, r);
     if (!A) { dst.die = null; dst.text = ""; dst.sides = 2; }
     var busScale = clamp(dst.w * 0.42 / 120, 0.18, 1);
-    var v0 = clamp(state.v || 4000, 1500, 6000), seed = (state.seed || 7) ^ 0x2c1b3c6d;
+    var v0 = clamp(state.v || 3400, 1500, 4500), seed = (state.seed || 7) ^ 0x2c1b3c6d;
     var world = new World(seed, 700, busScale), rt = world.rt;
     rt.ensure(2200);
     var sf = rt.straightFrom != null ? rt.straightFrom : 1200;
@@ -535,7 +544,7 @@
     setText("path", "→ " + page.idx + " " + page.label); setText("idx", page.idx + " · arriving"); setText("label", page.html, true);
     el.bar.style.width = "70%";
 
-    var t0 = performance.now(), lastT = t0, f0 = state.f || 5e10, skipAt = 0, revealed = false;
+    var t0 = performance.now(), lastT = t0, f0 = state.f || 5e10, skipAt = 0, revealed = false, fno = 0;
     var BLEND0 = T * 0.42, FADE0 = T + 260, FADE = 600;
     function skip() { if (!skipAt) skipAt = performance.now(); }
     box.addEventListener("click", skip); addEventListener("keydown", skip, { once: true });
@@ -548,18 +557,18 @@
       world.fxA = 1 - clamp((t - BLEND0) / (T - BLEND0), 0, 1);
       var hp = rt.at(world.d);
       /* the real chip may move a little once fonts load: keep tracking it */
-      if (A) { r = A.getBoundingClientRect(); dst.w = r.width; dst.h = r.height; dst.wy = E.y - dst.pinL - dst.h / 2; }
+      if (A && (++fno % 8 === 0)) { r = A.getBoundingClientRect(); dst.w = r.width; dst.h = r.height; dst.wy = E.y - dst.pinL - dst.h / 2; }
       dst.cx = dst.wx; dst.cy = dst.wy;
       var Tc = [r.left + r.width / 2, r.top + r.height / 2];
       var camFinal = [dst.wx - (Tc[0] - W / 2), dst.wy - (Tc[1] - H / 2)];
       var e = eInOut(clamp((t - BLEND0) / (T + 120 - BLEND0), 0, 1));
-      var rotFollow = angTo(world.rot, -Math.PI / 2 - hp.a, 1 - Math.pow(0.006, dt));
+      var rotFollow = angTo(world.rot, -Math.PI / 2 - lookAngle(rt, world.d, 260 + world.v * 0.12), 1 - Math.pow(0.03, dt));
       world.rot = angTo(rotFollow, 0, e);
       world.cam = [lerp(hp.x, camFinal[0], e), lerp(hp.y, camFinal[1], e)];
       world.anchor = [W / 2, lerp(H * 0.6, H / 2, e)];
       world.z = lerp(0.84, 1, e);
       world.step(dt, now);
-      setText("freq", fmtF(lerp(f0, 4.2e9, eOut(pa))), true); setText("sub", pa < 1 ? "Decelerating" : "Signal locked");
+      if (hudDue(now)) { setText("freq", fmtF(lerp(f0, 4.2e9, eOut(pa))), true); setText("sub", pa < 1 ? "Decelerating" : "Signal locked"); }
 
       if (pa >= 1 && !dst.hitAt) {
         dst.hitAt = now; world.headOn = false; chime(); el.bar.style.width = "100%";
@@ -567,7 +576,9 @@
         hud.classList.remove("on");
       }
       if (dst.hitAt) dst.lit = clamp((now - dst.hitAt) / 260, 0, 1) * (1 - clamp((now - dst.hitAt - 500) / 600, 0, 1));
-      world.draw(now, pa < 1 ? lerp(0.35, 0.7, pa) : 1);
+      world.draw(now, 1);
+      var bloomIn = 1 - clamp(t / 320, 0, 1);
+      if (bloomIn > 0) { g.setTransform(D, 0, 0, D, 0, 0); g.fillStyle = "rgba(" + P.bg + "," + (eOut(bloomIn) * 0.92) + ")"; g.fillRect(0, 0, W, H); }
 
       /* the board fades away around the chip, leaving the real page */
       var pf = clamp((t - FADE0) / FADE, 0, 1);
@@ -582,7 +593,7 @@
     }
     requestAnimationFrame(frame);
   }
-  function finish() { unmount(); busy = false; document.body.style.visibility = ""; }
+  function finish() { unmount(); busy = false; window.__warpBusy = false; document.body.style.visibility = ""; }
 
   /* ---------- wiring ---------- */
   document.addEventListener("click", function (e) {
@@ -595,7 +606,7 @@
   /* back/forward cache: never come back to a half-finished warp */
   addEventListener("pageshow", function (e) {
     if (!e.persisted) return;
-    busy = false; unmount(); root.classList.remove("warp-in");
+    busy = false; window.__warpBusy = false; unmount(); root.classList.remove("warp-in");
     if (srcEl) srcEl.style.visibility = "";
     document.body.style.transform = ""; document.body.style.visibility = "";
     P = palette();

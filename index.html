@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="warp.css">
+  <link rel="stylesheet" href="warp.css?v=202611062124">
   <style>
     :root {
       --bg: #fbfaf6;
@@ -94,8 +94,8 @@
     /* ================= stage ================= */
     .stage {
       position: relative; z-index: 3; height: 100vh; height: 100dvh;
-      display: grid; grid-template-columns: minmax(0, 1.15fr) auto;
-      align-items: center; gap: clamp(28px, 6vw, 110px); padding: 0 clamp(24px, 7vw, 120px);
+      display: grid; grid-template-columns: auto auto; justify-content: center;
+      align-items: center; gap: clamp(40px, 7vw, 130px); padding: 0 clamp(24px, 5vw, 80px);
     }
     .identity { will-change: transform; }
 
@@ -155,7 +155,7 @@
     .btn kbd { font: 500 10px var(--mono); padding: 2px 6px; border: 1px solid currentColor; border-radius: 3px; opacity: 0.6; }
 
     /* ================= the chip ================= */
-    .chip-wrap { position: relative; padding: 18px; margin-right: 1.5rem; opacity: 0; transition: opacity 0.7s ease; }
+    .chip-wrap { position: relative; padding: 18px; opacity: 0; transition: opacity 0.7s ease; }
     body.chip-on .chip-wrap { opacity: 1; }
     .chip .pins { transition: transform 0.7s cubic-bezier(.2, .8, .2, 1) 0.15s; }
     .pins.t, .pins.b { transform: scaleX(0); }
@@ -277,7 +277,7 @@
       </h1>
       <div class="actions">
         <button class="btn primary" id="enter" type="button">Enter portfolio</button>
-        <a class="btn ghost" href="Rowan-Dogwe-Resume.pdf" target="_blank" rel="noopener">View r&eacute;sum&eacute;</a>
+        <a class="btn ghost" href="about.html" data-warp>About me</a>
       </div>
     </section>
 
@@ -597,8 +597,8 @@
       ctx.restore();
 
       /* pulses (when the visitor presses Enter, the whole board overclocks) */
-      if (oc) { speed = 1; if (Math.random() < 0.5) { var ch = $("#chip"); ch.classList.toggle("zap"); } }
-      if (!reduce && now - lastSpawn > 380 * (1 - oc * 0.97)) { lastSpawn = now; for (var sp = 0; sp < 1 + oc * 6; sp++) pulses.push({ p: chipPaths[Math.floor(Math.random() * chipPaths.length)], d: 0, v: (240 + Math.random() * 260) * (1 + oc * 4) }); }
+      if (oc) speed = 1;
+      if (!reduce && pulses.length < 60 && now - lastSpawn > 380 * (1 - oc * 0.9)) { lastSpawn = now; for (var sp = 0; sp < 1 + oc * 3; sp++) pulses.push({ p: chipPaths[Math.floor(Math.random() * chipPaths.length)], d: 0, v: (240 + Math.random() * 260) * (1 + oc * 4) }); }
       pulses = pulses.filter(function (q) {
         q.d += q.v * dt; if (q.d > q.p.len + 50) return false;
         for (var k = 0; k < 8; k++) {
@@ -762,6 +762,8 @@
       var t = now - T0;
       if (!flags.chip && t > (reduce ? 0 : 400)) { document.body.classList.add("chip-on"); flags.chip = true; }
       if (!flags.ready && t > (reduce ? 0 : READY_AT)) { document.body.classList.add("ready"); flags.ready = true; }
+      /* while the page is covered by a transition, skip all drawing */
+      if (document.body.style.visibility === "hidden") { requestAnimationFrame(frame); return; }
       drawBoard(now);
       if (portraitReady && (portraitDirty || t < PSTART + PSPAN + 100)) drawPortrait(now);
       tickName(now); motion(); magnet();
@@ -923,7 +925,7 @@
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(begin); setTimeout(begin, 1800); } else begin();
   })();
   </script>
-  <script src="warp.js"></script>
+  <script src="warp.js?v=202611062124"></script>
   <noscript><style>#intro{display:none}.chip-wrap,.bar,.kicker,.role,.actions{opacity:1!important;transform:none!important}.die img{opacity:1!important}</style><p style="position:fixed;left:7vw;top:40vh;z-index:9;font:400 64px Georgia,serif">Rowan P. Dogwe</p></noscript>
 </body>
 </html>

@@ -43,6 +43,7 @@
   }
   var last = 0, spawn = 0;
   function draw(now) {
+    if (document.body.style.visibility === "hidden" || window.__warpBusy) { last = now; if (!reduce) requestAnimationFrame(draw); return; }
     var dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
     g.clearRect(0, 0, W, H); g.drawImage(cache, 0, 0, W, H);
     if (!reduce) {
@@ -58,6 +59,18 @@
   build(); addEventListener("resize", function () { build(); if (reduce) draw(performance.now()); });
   addEventListener("rpd:theme", function () { pal(); build(); if (reduce) draw(performance.now()); });
   requestAnimationFrame(draw);
+
+  /* ---------- contact details are kept out of the page source (anti-scraping) ---------- */
+  function dec(v) { try { return decodeURIComponent(escape(atob(v))); } catch (e) { return ""; } }
+  document.querySelectorAll("[data-c]").forEach(function (n) { n.textContent = dec(n.getAttribute("data-c")); });
+  document.querySelectorAll("[data-tel]").forEach(function (n) { n.setAttribute("href", "tel:" + dec(n.getAttribute("data-tel"))); });
+
+  /* ---------- age stays correct after every birthday ---------- */
+  document.querySelectorAll("[data-age]").forEach(function (n) {
+    var b = new Date(n.getAttribute("data-age") + "T00:00:00"), t = new Date(), a = t.getFullYear() - b.getFullYear();
+    if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) a--;
+    if (a > 0 && a < 120) n.textContent = a;
+  });
 
   /* ---------- boot: stagger the parts in and decode the title from bits ---------- */
   document.querySelectorAll("[data-boot]").forEach(function (n, i) { n.style.setProperty("--i", i); });
