@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  var KEY = "rpd-warp", SND = "rpd-snd", THEME = "rpd-theme";
+  var KEY = "rpd-warp", SND = "rpd-snd", THEME = "rpd-theme2";
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var root = document.documentElement;
 
