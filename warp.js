@@ -22,7 +22,7 @@
     "index.html":         { idx: "0x00", label: "Home",                     html: "Home" },
     "personal-info.html": { idx: "0x01", label: "Personal Info",            html: "Personal <i>Info</i>" },
     "about.html":         { idx: "0x02", label: "About Me",                 html: "About <i>Me</i>" },
-    "education.html":     { idx: "0x03", label: "Education & Achievements", html: "Education <i>&amp; Achievements</i>" },
+    "achievements.html":  { idx: "0x03", label: "Achievements",             html: "My <i>Achievements</i>" },
     "family.html":        { idx: "0x04", label: "Family",                   html: "My <i>Family</i>" }
   };
   function fileOf(href) { var p = new URL(href, location.href).pathname.split("/").pop(); return p || "index.html"; }

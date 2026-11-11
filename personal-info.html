@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="warp.css?v=202611062329">
-  <link rel="stylesheet" href="site.css?v=202611062329">
+  <link rel="stylesheet" href="warp.css?v=20261111215810">
+  <link rel="stylesheet" href="site.css?v=20261111215810">
 </head>
 <body data-seed="101">
   <canvas id="bg" aria-hidden="true"></canvas>
@@ -28,6 +28,7 @@
           <a href="index.html" data-warp><em>0x00</em><span class="lg">Home</span><span class="sm">Home</span></a>
           <a href="personal-info.html" data-warp aria-current="page"><em>0x01</em><span class="lg">Personal Info</span><span class="sm">Personal</span></a>
           <a href="about.html" data-warp><em>0x02</em><span class="lg">About Me</span><span class="sm">About</span></a>
+          <a href="achievements.html" data-warp><em>0x03</em><span class="lg">Achievements</span><span class="sm">Achieve</span></a>
         </nav>
         <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="ico" aria-hidden="true"></span><span class="txt">Dark</span></button>
       </div>
@@ -37,25 +38,41 @@
       <div class="pi">
         <section class="pi-text">
           <span class="kicker" data-boot>0x01 &middot; Personal Info</span>
-          <h1 class="pi-name" data-boot data-decode>Rowan Pacha-eo <i>Dogwe</i></h1>
+          <h1 class="pi-name one" data-boot data-decode>Rowan Pacha-eo <i>Dogwe</i></h1>
           <div class="pi-contact" data-boot>
             <a class="pi-mail" href="mailto:rowan.p.dogwe@gmail.com"><span>Email</span><b>rowan.p.dogwe@gmail.com</b></a>
             <a class="pi-mail" data-tel="KzYzOTU2OTE3MTcwNA=="><span>Phone</span><b data-c="MDk1NiA5MTcgMTcwNA==">&middot;&middot;&middot;</b></a>
             <p class="pi-mail"><span>Address</span><b data-c="NjEzQiBUZW5lcmFjZSwgU2FuIFZpY2VudGUsIEJhZ3VpbyBDaXR5">&middot;&middot;&middot;</b></p>
           </div>
 
-          <dl class="facts">
+          <div class="pi-tabs" role="tablist" aria-label="Personal info sections" data-boot>
+            <button type="button" role="tab" class="on" aria-selected="true" data-pitab="data"><em>01</em> Personal data</button>
+            <button type="button" role="tab" aria-selected="false" data-pitab="skills"><em>02</em> Skills &amp; hobbies</button>
+          </div>
+
+          <dl class="facts pi-pane on" data-pipane="data">
+            <div class="fact c2" data-boot><dt>Sex</dt><dd>Female</dd></div>
             <div class="fact c3" data-boot><dt>Birthday</dt><dd>December 31, 2006</dd></div>
             <div class="fact c2" data-boot><dt>Age</dt><dd data-age="2006-12-31">19</dd></div>
+            <div class="fact c2" data-boot><dt>Civil status</dt><dd>Single</dd></div>
             <div class="fact c3" data-boot><dt>Citizenship</dt><dd>Filipino</dd></div>
-            <div class="fact c4" data-boot><dt>Location</dt><dd>Baguio City</dd></div>
 
-            <div class="fact c6" data-boot><dt>College</dt><dd>University of the Cordilleras</dd></div>
-            <div class="fact c6" data-boot><dt>Course &amp; year level</dt><dd>BS Computer Science &middot; First year</dd></div>
+            <div class="fact c6" data-boot><dt>Place of birth</dt><dd><span data-c="TGEgVHJpbmlkYWQgQmVuZ3VldCBHZW5lcmFsIEhvc3BpdGFs">&middot;&middot;&middot;</span></dd></div>
+            <div class="fact c3" data-boot><dt>Religion</dt><dd><span data-c="Um9tYW4gQ2F0aG9saWM=">&middot;&middot;&middot;</span></dd></div>
+            <div class="fact c3" data-boot><dt>Height &middot; weight</dt><dd><span data-c="NSBmdCDCtyA1OCBrZw==">&middot;&middot;&middot;</span></dd></div>
 
-            <div class="fact c5" data-boot><dt>Skills</dt><dd class="skills"><span>Java</span><span>TypeScript</span><span>JavaScript</span><span>Python</span><span>SQL</span><span>Dart &amp; Flutter</span><span>Next.js &amp; React</span><span>FastAPI</span><span>PostgreSQL</span><span>Git</span></dd></div>
-            <div class="fact c7" data-boot><dt>Hobbies</dt><dd><ul class="hob"><li>Building apps and AI tools</li><li>Animating stickman cartoons</li><li>Making YouTube videos</li><li>Exploring tech and business stories</li></ul></dd></div>
+            <div class="fact c4" data-boot><dt>Languages</dt><dd>English, Filipino, Ilocano</dd></div>
+            <div class="fact c3" data-boot><dt>Location</dt><dd>Baguio City</dd></div>
+            <div class="fact c5" data-boot><dt>College</dt><dd>University of the Cordilleras</dd></div>
 
+            <div class="fact c4" data-boot><dt>Course &amp; year level</dt><dd>BS Computer Science <small>First year</small></dd></div>
+            <div class="fact c4" data-boot><dt>Father</dt><dd><span data-c="VmljdG9yIERvZ3dl">&middot;&middot;&middot;</span> <small><span data-c="Q29uc3RydWN0aW9uIHdvcmtlcg==">&middot;&middot;&middot;</span></small></dd></div>
+            <div class="fact c4" data-boot><dt>Mother</dt><dd><span data-c="QWdhdGhhIERvZ3dl">&middot;&middot;&middot;</span> <small><span data-c="U2FsZXMgbGFkeQ==">&middot;&middot;&middot;</span></small></dd></div>
+          </dl>
+
+          <dl class="facts pi-pane" data-pipane="skills">
+            <div class="fact c5"><dt>Skills</dt><dd class="skills"><span>Java</span><span>TypeScript</span><span>JavaScript</span><span>Python</span><span>SQL</span><span>Dart &amp; Flutter</span><span>Next.js &amp; React</span><span>FastAPI</span><span>PostgreSQL</span><span>Git</span></dd></div>
+            <div class="fact c7"><dt>Hobbies</dt><dd><ul class="hob"><li>Building apps and AI tools</li><li>Animating stickman cartoons</li><li>Making YouTube videos</li><li>Exploring tech and business stories</li></ul></dd></div>
           </dl>
         </section>
 
@@ -78,7 +95,7 @@
     </footer>
   </div>
 
-  <script src="warp.js?v=202611062329"></script>
-  <script src="site.js?v=202611062329"></script>
+  <script src="warp.js?v=20261111215810"></script>
+  <script src="site.js?v=20261111215810"></script>
 </body>
 </html>
