@@ -997,3 +997,47 @@ html.ap-open, html.ap-open body { overflow: hidden; }
   .sc.has-bg .sc-ph .slot { width: min(78%, 21vh); height: auto; aspect-ratio: 4 / 5; }
   .sc.has-bg .sc-ph .slot.pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 }
+/* v20: Extracurricular + Work: each item's photos become its moving background (same idea as the school boxes).
+   The photo strip fills the whole item and keeps travelling; a veil in the panel colour keeps the text readable.
+   Clicking anywhere on the item opens the photo that is showing. */
+.cx .it.has-ph { position: relative; display: block !important; isolation: isolate; overflow: hidden;
+  padding: clamp(6px, 0.8vh, 10px) clamp(8px, 0.8vw, 12px) !important; border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent) !important;
+  border-radius: 4px; margin-bottom: clamp(4px, 0.7vh, 8px); min-height: clamp(64px, 9vh, 120px); }
+.work .it.has-ph:nth-child(3) { padding-left: clamp(8px, 0.8vw, 12px) !important; border-left: 1px solid color-mix(in srgb, var(--gold) 45%, transparent) !important; margin-left: 0; }
+.cx .it.has-ph > .phs { position: absolute !important; inset: 0 !important; width: auto !important; height: auto !important; aspect-ratio: auto !important;
+  z-index: 0; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #0c0c0c; transform: none !important; }
+.cx .it.has-ph > .phs .phs-i img { object-position: 50% 35%; }
+.cx .it.has-ph::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--panel) 90%, transparent) 0%, color-mix(in srgb, var(--panel) 80%, transparent) 50%, color-mix(in srgb, var(--panel) 48%, transparent) 100%); }
+.cx .it.has-ph > :not(.phs) { position: relative; z-index: 2; pointer-events: none; }
+.cx .it.has-ph > :not(.phs) a, .cx .it.has-ph > :not(.phs) button { pointer-events: auto; }
+.cx .it.has-ph .label, .cx .it.has-ph b, .cx .it.has-ph p, .cx .it.has-ph i, .cx .it.has-ph td, .cx .it.has-ph th, .cx .it.has-ph span { text-shadow: 0 0 2px var(--panel), 0 0 6px var(--panel), 0 1px 10px var(--panel); }
+.cx .it.has-ph > .phs .phs-n { z-index: 3; }
+.cx .it.has-ph:hover { border-color: var(--gold) !important; }
+.cx .it.has-ph { cursor: zoom-in; }
+/* v21: no empty space: the Extracurricular + Work row takes all the height left under the schools,
+   and the items inside each panel stretch to fill their panel */
+@media (min-width: 861px) {
+  .mid-in { display: flex !important; flex-direction: column; }
+  .mid-in > .cols { flex: 1 1 auto; min-height: 0; align-items: stretch; }
+  .cols > .cx { display: flex; flex-direction: column; min-height: 0; }
+  .cols > .cx > .items { flex: 1 1 auto; min-height: 0; align-content: stretch; grid-auto-rows: auto; }
+  .cols .it.has-ph { margin-bottom: 0 !important; min-height: 0; }
+  .work .items { grid-template-rows: auto auto; }
+  .work .it.has-ph:nth-child(3) { grid-row: 1 / 3 !important; align-self: stretch; }
+}
+/* v22: the View all pictures rail stops ONLY while the cursor is on it: it moves again the moment the cursor leaves
+   (a photo keeping focus after a click no longer keeps it paused; keyboard users still get a pause while tabbing) */
+.rail:focus-within .rail-track { animation-play-state: running; }
+.rail:hover .rail-track, .rail:has(:focus-visible) .rail-track { animation-play-state: paused; }
+/* v23: no "View all pictures" button any more: the photo column fills its whole height and just keeps moving */
+.rail.g { grid-template-rows: minmax(0, 1fr); }
+/* photo column labels: show the whole name (wrap onto a second line instead of cutting it off) */
+.rp span { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.35; }
+
+/* Senior High awards box: its photo follows the box height, so the box can match the College note exactly */
+@media (min-width: 861px) {
+  .sc-aw1 { box-sizing: border-box; overflow: hidden; }
+  .sc-aw1 .ph { height: 100%; width: auto !important; aspect-ratio: 4 / 5; max-width: 42%; align-self: stretch; flex: none; }
+  .sc.now .sc-note { box-sizing: border-box; }
+}

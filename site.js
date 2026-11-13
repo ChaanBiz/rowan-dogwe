@@ -138,6 +138,7 @@
     var SEC = 3.2, clock = { t: 0, hover: 0, hold: 0 }, strips = [], last = 0;   /* clock.t = seconds of motion */
     boxes.forEach(function (box) {
       var tr = box.querySelector(".phs-track"), n = +box.getAttribute("data-n");
+      if (n < 2) return;                                   /* a single picture stays still */
       var kids = [].slice.call(tr.children);
       kids.reverse().forEach(function (k) { tr.appendChild(k); });                   /* n .. 1 */
       kids.forEach(function (k) { var c = k.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; tr.appendChild(c); });
@@ -244,6 +245,11 @@
   else requestAnimationFrame(function () { requestAnimationFrame(boot); });
 })();
 
+/* ---------- side photo rails: the moment the cursor leaves a rail it moves again
+   (drop the focus a clicked photo kept, which would otherwise hold the pause) ---------- */
+document.querySelectorAll(".rail").forEach(function (r) {
+  r.addEventListener("mouseleave", function () { var a = document.activeElement; if (a && r.contains(a)) a.blur(); });
+});
 /* ---------- side photo rails: same gentle speed whatever their length ---------- */
 (function () {
   function tune() {
@@ -251,7 +257,7 @@
     for (var i = 0; i < rails.length; i++) {
       var set = rails[i].querySelector(".rail-set"); if (!set) continue;
       var len = innerWidth <= 860 ? set.offsetWidth : set.offsetHeight;
-      if (len) rails[i].style.setProperty("--dur", Math.max(13.2, len / 38.25).toFixed(1) + "s");   /* 38.25 px/s (25.5 px/s + 50%) */
+      if (len) rails[i].style.setProperty("--dur", Math.max(8.5, len / 60).toFixed(1) + "s");   /* 60 px/s */
     }
   }
   addEventListener("load", tune); addEventListener("resize", tune);
@@ -262,7 +268,29 @@
   var mid = document.querySelector(".mid"), inner = mid && mid.querySelector(".mid-in");
   if (!inner) return;
   var root = document.documentElement;
-  function reset() { inner.style.transform = ""; inner.style.width = ""; inner.style.removeProperty("--s"); }
+  function reset() { inner.style.transform = ""; inner.style.width = ""; inner.style.minHeight = ""; inner.style.removeProperty("--s"); }
+  /* the Senior High awards box and the College "Working student" box: same top, same height (same width already) */
+  function syncBoxes(s) {
+    var a = inner.querySelector(".sc-aw1"), n = inner.querySelector(".sc.now .sc-note");
+    if (!a || !n) return;
+    [a, n].forEach(function (el) { el.style.marginTop = ""; el.style.height = ""; el.style.flex = ""; });
+    if (innerWidth <= 860) return;
+    var ra = a.getBoundingClientRect(), rn = n.getBoundingClientRect();
+    var pa = a.parentElement.getBoundingClientRect(), pn = n.parentElement.getBoundingClientRect();
+    var pba = parseFloat(getComputedStyle(a.parentElement).paddingBottom) * s, pbn = parseFloat(getComputedStyle(n.parentElement).paddingBottom) * s;
+    var T = Math.max(ra.top, rn.top), B = Math.min(pa.bottom - pba, pn.bottom - pbn), H = (B - T) / s;
+    if (H < 40) return;
+    a.style.marginTop = (parseFloat(getComputedStyle(a).marginTop) + (T - ra.top) / s) + "px";
+    n.style.marginTop = (parseFloat(getComputedStyle(n).marginTop) + (T - rn.top) / s) + "px";
+    a.style.height = H + "px"; n.style.height = H + "px"; n.style.flex = "none";
+    /* if the awards text does not fit the shared height, make the photo narrower, then the text slightly smaller */
+    var ul = a.querySelector("ul"), ph = a.querySelector(".ph"), f = 1, w = 42;
+    if (ph) ph.style.maxWidth = "";
+    while (a.scrollHeight > a.clientHeight + 1 && w > 26 && ph) { w -= 4; ph.style.maxWidth = w + "%"; }
+    var txt = ul ? [].slice.call(ul.querySelectorAll("b, span")) : [];
+    var base = txt.map(function (el) { return parseFloat(getComputedStyle(el).fontSize); });
+    while (a.scrollHeight > a.clientHeight + 1 && f > 0.72) { f -= 0.04; txt.forEach(function (el, i) { el.style.fontSize = (base[i] * f).toFixed(2) + "px"; }); }
+  }
   /* text on this page is 50% larger than the stylesheet's sizes (pictures unchanged) */
   var TEXT = 1.5, textEls = null;
   function bumpText() {
@@ -289,6 +317,8 @@
     }
     apply(s);
     while (inner.offsetHeight * s > room + 0.5 && s > SMIN) { s -= 0.005; apply(s); }
+    syncBoxes(s);
+    inner.style.minHeight = (room / s - 1) + "px";      /* any space left over goes to the Extracurricular / Work row */
   }
   var t; function soon() { clearTimeout(t); t = setTimeout(fit, 60); }
   fit(); addEventListener("load", fit); addEventListener("resize", soon);
