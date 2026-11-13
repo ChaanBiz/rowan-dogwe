@@ -251,7 +251,7 @@
     for (var i = 0; i < rails.length; i++) {
       var set = rails[i].querySelector(".rail-set"); if (!set) continue;
       var len = innerWidth <= 860 ? set.offsetWidth : set.offsetHeight;
-      if (len) rails[i].style.setProperty("--dur", Math.max(18, len / 28).toFixed(1) + "s");
+      if (len) rails[i].style.setProperty("--dur", Math.max(13.2, len / 38.25).toFixed(1) + "s");   /* 38.25 px/s (25.5 px/s + 50%) */
     }
   }
   addEventListener("load", tune); addEventListener("resize", tune);

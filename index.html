@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="warp.css?v=20261112201736">
+  <link rel="stylesheet" href="warp.css?v=2026111318031820261113174701202611131742522026111317030320261113170247202611131702282026111316344620261113161928">
   <style>
     :root {
       --bg: #fbfaf6;
@@ -78,6 +78,18 @@
     .bar > * { pointer-events: auto; }
     .bar.top { top: 0; }
     .bar.bottom { bottom: 0; }
+    /* previous / next buttons on the home page (same look as the inner pages; keyboard: left / right arrows) */
+    .bar .step { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 600 11px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; padding: 11px 16px; border-radius: 2px; text-shadow: none; transition: transform 0.18s, background 0.3s, box-shadow 0.18s; }
+    .bar .step em { font-style: normal; font-weight: 500; opacity: 0.7; }
+    .bar .step.prev { background: var(--solid); color: var(--on-solid); border: 1px solid var(--solid); }
+    .bar .step.prev:hover { transform: translateX(-3px); }
+    .bar .step.next { background: var(--gold); color: #111; border: 1px solid var(--gold); }
+    .bar .step.next:hover { transform: translateX(3px); box-shadow: 0 10px 26px rgba(214, 169, 92, 0.35); }
+    .bar .step.kbd-hit { transform: scale(0.96); }
+    .bar.bottom > * { white-space: nowrap; }
+    @media (max-width: 1500px) { .bar.bottom .coords { display: none; } }
+    @media (max-width: 1180px) { .bar.bottom .hint { display: none; } }
+    @media (max-width: 860px) { .bar .step { padding: 9px 11px; font-size: 10px; } .bar .step em { display: none; } .bar.bottom .led { display: none; } }
     body.ready .bar { opacity: 1; }
     .led { display: inline-flex; align-items: center; gap: 10px; }
     .led i { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: clock 1s steps(2, jump-none) infinite; }
@@ -300,9 +312,11 @@
   </main>
 
   <footer class="bar bottom">
+    <a class="step prev" href="family.html" data-warp aria-keyshortcuts="ArrowLeft">&larr; <em>0x03</em> Family &amp; friends</a>
     <span class="led"><i></i> System ready &middot; clk 1&nbsp;Hz</span>
     <span class="hint" id="hint">Hover the chip to read the bits &middot; click anywhere to strike</span>
     <span class="coords">16.40&deg;N &middot; 120.59&deg;E</span>
+    <a class="step next" href="personal-info.html" data-warp aria-keyshortcuts="ArrowRight"><em>0x01</em> Personal info &rarr;</a>
   </footer>
 
   <div id="probe" aria-hidden="true"><span class="ring"></span><span class="read" id="probeRead"></span></div>
@@ -925,7 +939,7 @@
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(begin); setTimeout(begin, 1800); } else begin();
   })();
   </script>
-  <script src="warp.js?v=20261112201736"></script>
+  <script src="warp.js?v=2026111318031820261113174701202611131742522026111317030320261113170247202611131702282026111316344620261113161928"></script>
   <noscript><style>#intro{display:none}.chip-wrap,.bar,.kicker,.role,.actions{opacity:1!important;transform:none!important}.die img{opacity:1!important}</style><p style="position:fixed;left:7vw;top:40vh;z-index:9;font:400 64px Georgia,serif">Rowan P. Dogwe</p></noscript>
 </body>
 </html>

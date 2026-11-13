@@ -21,9 +21,8 @@
   var PAGES = {
     "index.html":         { idx: "0x00", label: "Home",                     html: "Home" },
     "personal-info.html": { idx: "0x01", label: "Personal Info",            html: "Personal <i>Info</i>" },
-    "about.html":         { idx: "0x02", label: "About Me",                 html: "About <i>Me</i>" },
     "achievements.html":  { idx: "0x02", label: "Achievements",             html: "My <i>Achievements</i>" },
-    "family.html":        { idx: "0x04", label: "Family",                   html: "My <i>Family</i>" }
+    "family.html":        { idx: "0x03", label: "Family & Friends",         html: "Family &amp; <i>Friends</i>" }
   };
   function fileOf(href) { var p = new URL(href, location.href).pathname.split("/").pop(); return p || "index.html"; }
   function pageOf(href) { return PAGES[fileOf(href)] || { idx: "0x??", label: "Next page", html: "Next page" }; }
@@ -624,4 +623,37 @@
   } else root.classList.remove("warp-in");
 
   window.Warp = { go: go, pages: PAGES, arriving: arriving, theme: theme };
+})();
+
+/* ---------- keyboard: <- / -> press the page's Previous / Next buttons (same warp transition as a click) ---------- */
+(function () {
+  document.addEventListener("keydown", function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    var a = document.activeElement, tag = a && a.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (a && a.isContentEditable)) return;
+    var lb = document.getElementById("lb"), ap = document.getElementById("allpics");
+    if ((lb && !lb.hidden) || (ap && !ap.hidden)) return;               /* photo viewer / "all pictures" use the arrows */
+    if (document.getElementById("intro") && !document.body.classList.contains("ready")) return;   /* home intro still playing */
+    var sel = e.key === "ArrowRight" ? "a.step.next" : "a.step.prev";
+    var btn = document.querySelector(sel);
+    if (!btn || !btn.offsetParent) return;
+    e.preventDefault();
+    if (window.__warpBusy) {                      /* a page change is still animating: do it as soon as it ends */
+      pending = sel; pendingAt = Date.now();
+      if (!poll) poll = setInterval(function () {
+        if (Date.now() - pendingAt > 6000) { clearInterval(poll); poll = null; pending = null; return; }
+        if (window.__warpBusy) return;
+        clearInterval(poll); poll = null; var s2 = pending; pending = null; go(s2);
+      }, 80);
+      return;
+    }
+    go(sel);
+  });
+  var pending = null, pendingAt = 0, poll = null;
+  function go(sel) {
+    var btn = document.querySelector(sel); if (!btn || !btn.offsetParent) return;
+    btn.classList.add("kbd-hit"); setTimeout(function () { btn.classList.remove("kbd-hit"); }, 160);
+    btn.click();
+  }
 })();
