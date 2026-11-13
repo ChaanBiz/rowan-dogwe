@@ -857,3 +857,79 @@ html.ap-open, html.ap-open body { overflow: hidden; }
   .sc.now .sc-ph::before { background: var(--gold-hi); box-shadow: 0 0 0 4px rgba(217, 173, 79, 0.25); animation: now 1.6s ease-in-out infinite; }
 }
 @media (max-width: 860px) { .sc.done::before { background: var(--panel); border-style: dotted; border-color: var(--gold-hi); } }
+
+/* ===== v10: medal count on sports ===== */
+.medals { list-style: none; display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.medals li { display: inline-flex; align-items: center; gap: 5px; font: 700 clamp(9px, min(0.72vw, 1.5vh), 10.5px) var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); padding: 2px 7px 2px 3px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--panel-2); }
+.medals i { width: 11px; height: 11px; border-radius: 50%; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25); }
+.medals .g i { background: radial-gradient(circle at 35% 30%, #fff3c4, #e2b53e 55%, #9c7414); }
+.medals .s i { background: radial-gradient(circle at 35% 30%, #ffffff, #c4c9d2 55%, #7d838f); }
+.medals .b i { background: radial-gradient(circle at 35% 30%, #ffe0c2, #c98a4e 55%, #7f4f22); }
+
+/* ===== v11: college is the highlight ===== */
+.sc.now { isolation: isolate; }
+.sc.now::after { content: ""; position: absolute; z-index: -1; inset: 6px -8px -8px -10px; border: 1px solid var(--gold); border-radius: 4px; background: linear-gradient(160deg, rgba(217, 173, 79, 0.16), rgba(217, 173, 79, 0.04) 60%, transparent); box-shadow: 0 0 22px rgba(217, 173, 79, 0.18); pointer-events: none; }
+.sc.now > b { font-size: 1.22em; color: var(--gold-hi); }
+:root[data-theme="light"] .sc.now > b { color: var(--gold); }
+.sc.now .label { color: var(--gold-hi); }
+.sc-note { margin: 5px 0 0; padding: 4px 7px; border-left: 3px solid var(--gold); background: var(--panel-2); font: 600 clamp(9px, min(0.7vw, 1.45vh), 10.5px)/1.35 var(--mono); letter-spacing: 0.04em; color: var(--ink); }
+.sc-note span { color: var(--gold); }
+
+/* ===== v12: every school the same size; senior high dot = solid circle ===== */
+@media (min-width: 861px) {
+  .schools { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .sc.done .sc-ph::before { background: var(--gold); border: 2px solid var(--gold); }
+}
+@media (min-width: 861px) and (min-height: 821px) {
+  .sc.done .sc-ph { max-width: 250px; width: 100%; }
+}
+.medal-rows { display: grid; gap: 3px; margin-top: 4px; }
+.medal-rows > div { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.medal-rows > div > b { font: 700 clamp(9px, min(0.72vw, 1.5vh), 10.5px) var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); min-width: 7.5em; }
+.medal-rows .medals { margin-top: 0; }
+
+/* ===== v13: medal table (sport · medal · event · city) + wider extracurricular column ===== */
+.mtab { list-style: none; display: grid; grid-template-columns: auto auto minmax(0, 1fr); column-gap: 8px; row-gap: 3px; margin-top: 5px; }
+.mtab li { display: contents; }
+.mtab .sp { font: 700 clamp(8.5px, min(0.68vw, 1.4vh), 10px) var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); align-self: center; }
+.mtab .k .sp { padding-top: 3px; }
+.mtab .md { display: inline-flex; align-items: center; gap: 4px; font: 700 clamp(8.5px, min(0.68vw, 1.4vh), 10px) var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); padding: 1px 6px 1px 2px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--panel-2); justify-self: start; }
+.mtab .md i { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25); }
+.mtab .g .md i { background: radial-gradient(circle at 35% 30%, #fff3c4, #e2b53e 55%, #9c7414); }
+.mtab .s .md i { background: radial-gradient(circle at 35% 30%, #ffffff, #c4c9d2 55%, #7d838f); }
+.mtab .b .md i { background: radial-gradient(circle at 35% 30%, #ffe0c2, #c98a4e 55%, #7f4f22); }
+.mtab .ev { font-size: clamp(9px, min(0.72vw, 1.5vh), 10.5px); line-height: 1.3; color: var(--ink-2); align-self: center; }
+.mtab .ev em { font-style: normal; color: var(--muted); }
+.mtab .k .sp, .mtab .k .md, .mtab .k .ev { margin-top: 3px; }
+@media (min-width: 861px) {
+  .cols { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.6fr); }
+}
+.it > .mtab { grid-column: 1 / -1; margin-top: 6px; }
+
+/* ===== v14: responsive fill: boxes run end to end (button to button) and grow with the screen ===== */
+@media (min-width: 861px) {
+  .ach3 { max-width: none; width: 100%; justify-self: stretch; }
+  .mid-in > .cx.edu { max-width: none; width: auto; justify-self: stretch; align-self: start; display: block; }
+}
+@media (min-width: 861px) {
+  .mid-in { position: absolute; top: 0; left: 0; }
+}
+
+/* ===== v15: photos use their space: school pairs fill the column, strips are larger ===== */
+@media (min-width: 861px) {
+  .sc-ph, .sc.done .sc-ph { width: 100% !important; max-width: none !important; }
+  /* photo sizes are a share of the SCREEN height: --s is the page's fit scale, so they stay that size on screen */
+  .sc-ph .slot { aspect-ratio: auto; height: clamp(84px, 14vh, 160px); }
+  .sc-ph .slot.pic img { object-position: 50% 30%; }
+  .cols .phs { width: clamp(96px, min(10vw, 17.5vh), 180px); aspect-ratio: 4 / 3.1; }
+}
+
+/* ===== v16: bigger photo in the senior high awards box ===== */
+@media (min-width: 861px) {
+  .sc-aw1 { align-items: stretch; }
+  .sc-aw1 .ph { width: clamp(64px, 6.5vw, 120px); aspect-ratio: 4 / 5; align-self: center; }
+  .sc-aw1 .ph img { object-position: 50% 40%; }
+}
+/* senior high dot = same open ring as the other finished schools (only college is filled) */
+@media (min-width: 861px) { .sc.done .sc-ph::before { background: var(--panel); border: 2px solid var(--gold); } }
+@media (max-width: 860px) { .sc.done::before { background: var(--panel); border-style: solid; border-color: var(--gold); } }

@@ -128,42 +128,57 @@
     });
   }
 
-  /* ---------- photo strips on awards / jobs: glide left-to-right on their own, loop forever ---------- */
-  document.querySelectorAll(".phs[data-n]").forEach(function (box, bi) {
-    var tr = box.querySelector(".phs-track"), cnt = box.querySelector(".phs-n"), n = +box.getAttribute("data-n");
-    [].slice.call(tr.children).forEach(function (k) { var c = k.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; tr.appendChild(c); });
-    tr.style.scrollSnapType = "none";
-    var pos = 0, hover = false, hold = performance.now() + bi * 900, last = 0, SEC = 3.2;  /* one photo every ~3 s */
-    function W() { return Math.max(1, tr.clientWidth); }
-    function upd() { cnt.textContent = (Math.round(pos / W()) % n + 1) + "/" + n; }
-    function set(x) { var L = n * W(); pos = ((x % L) + L) % L; tr.scrollLeft = pos; upd(); }
-    function go(d) {
-      var w = W(), i = Math.round(pos / w);
-      if (d < 0 && i === 0) { set(n * w); i = n; }  /* jump to the identical copy so "back" keeps looping */
-      hold = performance.now() + 2600;
-      tr.scrollTo({ left: (i + d) * w, behavior: reduce ? "auto" : "smooth" });
-      setTimeout(function () { set(tr.scrollLeft); }, 520);
+  /* ---------- photo strips on awards / jobs: photos travel left -> right, ALL IN SYNC, loop forever ----------
+     One shared clock drives every strip, so they all start on load and move together. Pointing at any strip
+     pauses all of them. Photos are laid in reverse and the view moves leftwards, so each next photo
+     (1, 2, 3 ...) slides in from the LEFT and the strip flows to the right. */
+  (function () {
+    var boxes = document.querySelectorAll(".phs[data-n]");
+    if (!boxes.length) return;
+    var SEC = 3.2, clock = { t: 0, hover: 0, hold: 0 }, strips = [], last = 0;   /* clock.t = seconds of motion */
+    boxes.forEach(function (box) {
+      var tr = box.querySelector(".phs-track"), n = +box.getAttribute("data-n");
+      var kids = [].slice.call(tr.children);
+      kids.reverse().forEach(function (k) { tr.appendChild(k); });                   /* n .. 1 */
+      kids.forEach(function (k) { var c = k.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.tabIndex = -1; tr.appendChild(c); });
+      tr.style.scrollSnapType = "none";
+      var st = { box: box, tr: tr, n: n, cnt: box.querySelector(".phs-n"), off: 0, busy: 0, pos: 0 };
+      strips.push(st);
+      box.addEventListener("mouseenter", function () { clock.hover++; });
+      box.addEventListener("mouseleave", function () { clock.hover = Math.max(0, clock.hover - 1); });
+      tr.addEventListener("touchstart", function () { clock.hold = performance.now() + 4000; }, { passive: true });
+      tr.addEventListener("scroll", function () {               /* someone dragged / swiped it: keep that spot */
+        if (performance.now() < st.busy || Math.abs(tr.scrollLeft - st.pos) <= 2) return;
+        var w = W(st); st.off = ((2 * n - 1) * w - w * clock.t / SEC - tr.scrollLeft) / w; st.pos = tr.scrollLeft; upd(st);
+      }, { passive: true });
+      tr.addEventListener("wheel", function (e) {               /* mouse wheel steps through the photos */
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        e.preventDefault(); if (box._lock) return; box._lock = 1; go(st, e.deltaY > 0 ? 1 : -1); setTimeout(function () { box._lock = 0; }, 450);
+      }, { passive: false });
+    });
+    function W(st) { return Math.max(1, st.tr.clientWidth); }
+    function norm(st, x) { var w = W(st), L = st.n * w; while (x < L - w - 0.5) x += L; while (x > 2 * L - w + 0.5) x -= L; return x; }
+    function target(st) { var w = W(st); return norm(st, (2 * st.n - 1 - st.off) * w - w * clock.t / SEC); }
+    function upd(st) { st.cnt.textContent = (st.n - (Math.round(st.pos / W(st)) % st.n)) + "/" + st.n; }
+    function place(st) { st.pos = target(st); st.tr.scrollLeft = st.pos; upd(st); }
+    function go(st, d) {                                        /* d = +1: next photo (comes in from the left) */
+      var w = W(st), j = Math.round(st.pos / w);
+      if (d < 0 && j + 1 > 2 * st.n - 1) { st.pos -= st.n * w; st.tr.scrollLeft = st.pos; j -= st.n; }
+      st.busy = performance.now() + 600;
+      st.tr.scrollTo({ left: (j - d) * w, behavior: reduce ? "auto" : "smooth" });
+      setTimeout(function () { st.off += d; place(st); }, 560);
     }
-    box.addEventListener("mouseenter", function () { hover = true; });
-    box.addEventListener("mouseleave", function () { hover = false; pos = tr.scrollLeft; });
-    box.addEventListener("focusin", function () { hover = true; });
-    box.addEventListener("focusout", function () { hover = false; });
-    tr.addEventListener("touchstart", function () { hold = performance.now() + 4000; }, { passive: true });
-    tr.addEventListener("scroll", function () { if (Math.abs(tr.scrollLeft - pos) > 2) { pos = tr.scrollLeft; upd(); } }, { passive: true });
-    tr.addEventListener("wheel", function (e) {  /* mouse wheel steps through the photos */
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      e.preventDefault(); if (box._lock) return; box._lock = 1; go(e.deltaY > 0 ? 1 : -1); setTimeout(function () { box._lock = 0; }, 450);
-    }, { passive: false });
     function tick(t) {
-      var dt = last ? Math.min(64, t - last) : 16; last = t;
-      if (!hover && t > hold && !reduce && !document.hidden && !window.__warpBusy && (!lb || lb.hidden)) {
-        var L = n * W(); pos += W() / (SEC * 1000) * dt; if (pos >= L) pos -= L; tr.scrollLeft = pos;
-        upd();
-      }
+      var dt = last ? Math.min(64, t - last) : 0; last = t;
+      var moving = !clock.hover && t > clock.hold && !reduce && !document.hidden && !window.__warpBusy && (!lb || lb.hidden);
+      if (moving) clock.t += dt / 1000;
+      for (var i = 0; i < strips.length; i++) if (t > strips[i].busy) place(strips[i]);
       requestAnimationFrame(tick);
     }
-    upd(); requestAnimationFrame(tick);
-  });
+    strips.forEach(place);                                      /* every strip starts on photo 1, together */
+    addEventListener("resize", function () { strips.forEach(place); });
+    requestAnimationFrame(tick);
+  })();
 
   /* ---------- "View all pictures" pop-up (Achievements) ---------- */
   var ap = document.getElementById("allpics");
@@ -247,21 +262,33 @@
   var mid = document.querySelector(".mid"), inner = mid && mid.querySelector(".mid-in");
   if (!inner) return;
   var root = document.documentElement;
-  function reset() { inner.style.transform = ""; inner.style.width = ""; }
+  function reset() { inner.style.transform = ""; inner.style.width = ""; inner.style.removeProperty("--s"); }
+  /* text on this page is 50% larger than the stylesheet's sizes (pictures unchanged) */
+  var TEXT = 1.5, textEls = null;
+  function bumpText() {
+    textEls = textEls || [].slice.call(inner.querySelectorAll("*")).filter(function (el) { return !/^(IMG|svg|path|circle|rect)$/i.test(el.tagName); });
+    textEls.forEach(function (el) { el.style.fontSize = ""; });
+    var sizes = textEls.map(function (el) { return parseFloat(getComputedStyle(el).fontSize); });
+    textEls.forEach(function (el, i) { if (sizes[i]) el.style.fontSize = (sizes[i] * TEXT).toFixed(2) + "px"; });
+  }
+  /* scale the whole middle (text AND pictures) so it fills the space between the menu and the bottom buttons
+     exactly: smaller screens shrink it, bigger screens grow it. Width is set to 100/s % so it always spans
+     the full width, edge to edge. */
+  var SMIN = 0.55, SMAX = 1.9;
+  function apply(s) { inner.style.width = (100 / s) + "%"; inner.style.transform = "scale(" + s + ")"; inner.style.setProperty("--s", s); }
   function fit() {
-    reset(); root.classList.remove("ach-nohead");
+    reset(); root.classList.remove("ach-nohead"); bumpText();
     if (innerWidth <= 860) return;
-    var room = mid.clientHeight;
-    if (inner.offsetHeight <= room) return;
     root.classList.add("ach-nohead");
-    if (inner.offsetHeight <= room) return;
-    var s = 1;
-    for (var i = 0; i < 4; i++) {
-      s = Math.max(0.6, s * room / (inner.offsetHeight * s));
-      inner.style.width = (100 / s) + "%";
-      inner.style.transform = "scale(" + s + ")";
+    var room = mid.clientHeight, s = 1;
+    for (var i = 0; i < 8; i++) {                       /* width changes the wrapping, so converge */
+      apply(s);
+      var h = inner.offsetHeight, ns = Math.min(SMAX, Math.max(SMIN, room / h));
+      if (Math.abs(ns - s) < 0.002) break;
+      s = ns;
     }
-    while (inner.offsetHeight * s > room && s > 0.6) { s -= 0.01; inner.style.width = (100 / s) + "%"; inner.style.transform = "scale(" + s + ")"; }
+    apply(s);
+    while (inner.offsetHeight * s > room + 0.5 && s > SMIN) { s -= 0.005; apply(s); }
   }
   var t; function soon() { clearTimeout(t); t = setTimeout(fit, 60); }
   fit(); addEventListener("load", fit); addEventListener("resize", soon);
