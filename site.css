@@ -992,3 +992,8 @@ html.ap-open, html.ap-open body { overflow: hidden; }
   :root[data-theme="light"] .sc.has-bg > .label, :root[data-theme="light"] .sc.has-bg > b, :root[data-theme="light"] .sc.has-bg > small, :root[data-theme="light"] .sc.has-bg > .sc-y { text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 9px rgba(255, 255, 255, 0.9); }
   :root[data-theme="light"] .sc.has-bg > small { color: #2e2b26; }
 }
+/* v19: education photos are portrait frames big enough for the face AND the outfit (thumbnails are cropped 4:5) */
+@media (min-width: 861px) {
+  .sc.has-bg .sc-ph .slot { width: min(78%, 21vh); height: auto; aspect-ratio: 4 / 5; }
+  .sc.has-bg .sc-ph .slot.pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+}
