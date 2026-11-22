@@ -1101,3 +1101,11 @@ ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
 .facts.all .fact dd { margin-top: 2px; font-size: clamp(13.5px, min(1.32vw, 2.35vh), 22px); line-height: 1.15; }
 .facts.all .fact dd small { display: inline; margin-left: 6px; }
 .pi-contact { margin-top: clamp(10px, 2.2vh, 30px); }
+/* v30 — parents' occupations on family cards */
+.ff-occ { display: block; margin: 0 0 4px; font: 500 clamp(9px, 4.6cqi, 11.5px)/1.3 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+/* v31 — 10-row data sheet: spacing and type scale with screen height */
+.facts.all { margin-top: clamp(8px, 1.6vh, 22px); }
+.facts.all .fact { padding: clamp(3px, 0.72vh, 10px) 0 clamp(3px, 0.62vh, 9px); }
+.facts.all .fact dt { font-size: clamp(8px, min(0.72vw, 1.1vh), 10.5px); }
+.facts.all .fact dd { font-size: clamp(12.5px, min(1.25vw, 2.05vh), 22px); margin-top: 1px; }
+@media (min-width: 861px) { .pi .pi-name { font-size: clamp(34px, min(4.4vw, 7.4vh), 84px); } .pi-contact { margin-top: clamp(6px, 1.4vh, 26px); } }
