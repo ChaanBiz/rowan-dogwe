@@ -318,9 +318,50 @@ document.querySelectorAll(".rail").forEach(function (r) {
     apply(s);
     while (inner.offsetHeight * s > room + 0.5 && s > SMIN) { s -= 0.005; apply(s); }
     syncBoxes(s);
+    for (var g = 0; g < 60 && inner.offsetHeight * s > room + 0.5 && s > SMIN; g++) { s -= 0.005; apply(s); syncBoxes(s); }   /* matching the two boxes can add height: shrink again */
     inner.style.minHeight = (room / s - 1) + "px";      /* any space left over goes to the Extracurricular / Work row */
+    if (window.__tlDraw) setTimeout(window.__tlDraw, 30);
   }
   var t; function soon() { clearTimeout(t); t = setTimeout(fit, 60); }
   fit(); addEventListener("load", fit); addEventListener("resize", soon);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+
+/* ---------- Achievements timeline: circuit traces from each card to its date on the bus ---------- */
+(function () {
+  var tl = document.querySelector(".tl"); if (!tl) return;
+  var svg = tl.querySelector(".tl-traces"), NS = "http://www.w3.org/2000/svg";
+  function scale() { var m = document.querySelector(".mid-in"); return (m && parseFloat(m.style.getPropertyValue("--s"))) || 1; }
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (innerWidth <= 860) return;
+    var s = scale(), T = tl.getBoundingClientRect(), bus = tl.querySelector(".tl-bus").getBoundingClientRect();
+    var P = function (x, y) { return [(x - T.left) / s, (y - T.top) / s]; };
+    var busY = (bus.top + bus.height / 2 - T.top) / s, half = bus.height / 2 / s;
+    var links = [].slice.call(tl.querySelectorAll(".tl-nodes li")).map(function (n) {
+      var card = tl.querySelector('[data-tl="' + n.getAttribute("data-for") + '"]'), b = n.querySelector("b");
+      if (!card) return null;
+      var cr = card.getBoundingClientRect(), br = b.getBoundingClientRect(), top = n.classList.contains("top");
+      return { n: n, card: card, top: top, cx: P(cr.left + cr.width / 2, 0)[0], cy: P(0, top ? cr.bottom : cr.top)[1], nx: P(br.left + br.width / 2, 0)[0], ny: P(0, top ? br.top : br.bottom)[1] };
+    }).filter(Boolean);
+    ["top", "bot"].forEach(function (side) {
+      var L = links.filter(function (l) { return (side === "top") === l.top; });
+      L.sort(function (a, b) { return Math.abs(b.nx - b.cx) - Math.abs(a.nx - a.cx); });   /* longest run hugs the bus */
+      L.forEach(function (l, k) {
+        var lanes = L.length + 1, gap = Math.abs(l.ny - l.cy), laneY = l.top ? l.ny - (k + 1) * Math.min(7, (gap - 6) / lanes) : l.ny + (k + 1) * Math.min(7, (gap - 6) / lanes);
+        var d = "M" + l.cx.toFixed(1) + " " + l.cy.toFixed(1) + " V" + laneY.toFixed(1) + " H" + l.nx.toFixed(1) + " V" + l.ny.toFixed(1);
+        var p = document.createElementNS(NS, "path"); p.setAttribute("d", d); if (!l.top) p.setAttribute("class", "bot"); svg.appendChild(p);
+        var c = document.createElementNS(NS, "circle"); c.setAttribute("cx", l.cx); c.setAttribute("cy", l.cy); c.setAttribute("r", 3.4); c.setAttribute("class", "pad"); svg.appendChild(c);
+        var c2 = document.createElementNS(NS, "circle"); c2.setAttribute("cx", l.nx); c2.setAttribute("cy", l.ny); c2.setAttribute("r", 2.2); svg.appendChild(c2);
+        l.path = p;
+        var on = function (v) { return function () { [l.card, l.n, p].forEach(function (e) { e.classList.toggle("hot", v); }); }; };
+        if (!l.card.__tl) { l.card.__tl = 1; }
+      });
+    });
+  }
+  window.__tlDraw = draw;
+  var t; function soon() { clearTimeout(t); t = setTimeout(draw, 120); }
+  addEventListener("resize", soon); addEventListener("load", function () { setTimeout(draw, 200); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(draw, 250); });
+  setTimeout(draw, 400); setTimeout(draw, 1600);
 })();
