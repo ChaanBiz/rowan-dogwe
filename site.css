@@ -1041,3 +1041,63 @@ html.ap-open, html.ap-open body { overflow: hidden; }
   .sc-aw1 .ph { height: 100%; width: auto !important; aspect-ratio: 4 / 5; max-width: 42%; align-self: stretch; flex: none; }
   .sc.now .sc-note { box-sizing: border-box; }
 }
+
+/* v24 — family & friends photos: 2 × 2 landscape cards, whole photo visible */
+.ff { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-rows: repeat(2, minmax(0, 1fr)) !important; row-gap: clamp(12px, 1.4vw, 22px) !important; }
+.ff-card { grid-row: auto !important; display: grid !important; grid-template-rows: minmax(0, 1fr) !important; grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(14px, 1.4vw, 22px); align-items: stretch; }
+.ff-card .ff-ph { height: 100%; aspect-ratio: 4 / 3; width: auto; min-height: 0 !important; border-style: solid; flex: none; }
+.ff-ph img { object-position: 50% 45%; }
+.ff-card figcaption { align-self: center !important; }
+@media (max-width: 860px) {
+  .ff { grid-template-columns: 1fr !important; grid-template-rows: none !important; }
+  .ff-card { grid-template-columns: 1fr; }
+  .ff-card .ff-ph { height: auto; width: 100%; max-width: none; aspect-ratio: 4 / 3 !important; }
+}
+
+/* v25 — names under each family & friends title */
+.ff-names { display: block; margin: 4px 0 2px; padding: 0; list-style: none; font: 600 clamp(11px, min(0.95vw, 1.75vh), 14px)/1.45 var(--mono); letter-spacing: 0.04em; color: var(--gold); }
+.ff-names li { margin: 0; }
+.ff-names small { font-weight: 400; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.78em; }
+.ff-names.cols { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
+.ff-names.cols { line-height: 1.35; row-gap: 3px; }
+.ff-card:has(.ff-names.cols) figcaption p { margin-top: 0; }
+@media (max-height: 800px) and (min-width: 861px) { .ff-names.cols { font-size: 11px; row-gap: 1px; } .ff-card:has(.ff-names.cols) .ff-ph { aspect-ratio: 5 / 4; } }
+/* v26 — every name on a single line */
+.ff-names li, span.ff-names { white-space: nowrap; }
+.ff-names.cols { display: block; }
+.ff-names li > small:first-child { display: inline-block; min-width: 2.6em; color: var(--muted); }
+ol.ff-names { letter-spacing: 0.01em; font-size: clamp(11px, min(0.86vw, 1.6vh), 13px); }
+ol.ff-names li > small:first-child { min-width: 2.3em; }
+/* v27 — names scale with their card so they stay on one line at any width */
+.ff-card figcaption { container-type: inline-size; min-width: 0; }
+.ff-names { font-size: clamp(9px, 6.4cqi, 14px) !important; }
+ol.ff-names { font-size: clamp(9px, 5.6cqi, 13px) !important; }
+@media (min-width: 861px) {
+  .ff-card { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .ff-card .ff-ph { width: 100%; height: 100%; aspect-ratio: auto; max-height: 100%; }
+  .ff-card:has(.ff-names.cols) .ff-ph { aspect-ratio: auto !important; }
+  .ff { grid-template-rows: repeat(2, minmax(min-content, 1fr)) !important; }
+}
+.ff-names { font-size: clamp(8px, 5.8cqi, 14px) !important; }
+ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
+@media (min-width: 861px) and (max-width: 1100px) {
+  .ff-card { grid-template-columns: minmax(0, 0.75fr) minmax(0, 1fr); column-gap: 12px; }
+}
+/* v28 — tiny phones: header never wider than the screen */
+@media (max-width: 380px) { .top-r { gap: 6px; flex-wrap: nowrap; } .top-r .nav { min-width: 0; flex: 1 1 auto; } .top-r .nav a { min-width: 0; padding-left: 4px; padding-right: 4px; } .theme-btn { flex: none; } }
+/* family background: one sibling per line */
+.fact dd .sib { display: block; } .fact dd .sib + .sib { margin-top: 6px; }
+.shell { grid-template-columns: minmax(0, 1fr); }
+.body { grid-template-columns: minmax(0, 1fr); }
+.pi-text, .pi > * { min-width: 0; }
+@media (max-width: 860px) { .pi { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 380px) { .foot { gap: 6px; } .foot .step { padding: 9px 8px; letter-spacing: 0.08em; min-width: 0; } }
+.pi-tabs { flex-wrap: wrap; row-gap: 8px; }
+
+/* v29 — personal info: one complete data sheet, no tabs */
+.facts.all { margin-top: clamp(10px, 2.2vh, 26px); max-width: 880px; column-gap: clamp(14px, 1.8vw, 26px); }
+.facts.all .fact { padding: clamp(4px, 0.95vh, 11px) 0 clamp(4px, 0.85vh, 10px); }
+.facts.all .fact dt { font-size: clamp(8.5px, min(0.75vw, 1.25vh), 10.5px); letter-spacing: 0.18em; }
+.facts.all .fact dd { margin-top: 2px; font-size: clamp(13.5px, min(1.32vw, 2.35vh), 22px); line-height: 1.15; }
+.facts.all .fact dd small { display: inline; margin-left: 6px; }
+.pi-contact { margin-top: clamp(10px, 2.2vh, 30px); }

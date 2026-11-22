@@ -6,12 +6,12 @@
   <meta name="description" content="Rowan P. Dogwe — BS Computer Science, University of the Cordilleras. Professional portfolio.">
   <meta name="author" content="Rowan P. Dogwe">
   <meta name="theme-color" content="#0b0b0c">
-  <title>Rowan P. Dogwe</title>
+  <title>Rowan Pacha-eo Dogwe</title>
   <script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem("rpd-theme2")}catch(e){}d.setAttribute("data-theme",t==="light"?"light":"dark");try{var w=JSON.parse(sessionStorage.getItem("rpd-warp")||"null"),f=location.pathname.split("/").pop()||"index.html";if(w&&w.to===f&&Date.now()-w.ts<15000&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("warp-in")}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="warp.css?v=20261114072801">
+  <link rel="stylesheet" href="warp.css?v=20261122215043">
   <style>
     :root {
       --bg: #fbfaf6;
@@ -24,7 +24,7 @@
       --muted: #6e6a62;
       --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
       --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-      --chip: clamp(280px, min(35vw, 66vh), 520px);
+      --chip: clamp(200px, min(30vw, 49vh), 460px);
     }
 
     :root[data-theme="dark"] {
@@ -118,9 +118,10 @@
     }
     .kicker::before { content: ""; width: 38px; height: 1px; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
-    .name { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 8.6vw, 150px); line-height: 0.88; letter-spacing: -0.01em; }
-    .name .line { display: block; white-space: nowrap; }
-    .name .line + .line { font-style: italic; padding-left: 0.42em; color: var(--gold); }
+    .name { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4.8vw, 100px); line-height: 1; letter-spacing: -0.01em; }
+    .name { white-space: nowrap; }
+    .name .line { display: inline; white-space: nowrap; }
+    .name .line:last-child { font-style: italic; color: var(--gold); }
     .name .line.metal {
       background: linear-gradient(100deg, #6e4c14 0%, #b08327 22%, #e8c66e 34%, #b08327 46%, #7f5a1a 70%, #cfa043 88%, #6e4c14 100%);
       background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -164,6 +165,10 @@
     .btn.primary:hover { background: var(--gold-hi); border-color: var(--gold-hi); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(214, 169, 92, 0.35); }
     .btn.ghost { background: var(--solid); color: var(--on-solid); border: 1px solid var(--solid); }
     .btn.ghost:hover { border-color: var(--gold); color: var(--gold-hi); transform: translateY(-2px); }
+    @media (min-width: 821px) and (max-width: 1240px) {
+      .actions { flex-wrap: nowrap; gap: clamp(8px, 1vw, 14px); }
+      .btn { white-space: nowrap; font-size: clamp(9.5px, 1.02vw, 12.5px); letter-spacing: clamp(0.08em, 0.012vw + 0.06em, 0.2em); padding: clamp(11px, 1.2vw, 15px) clamp(11px, 1.6vw, 24px); }
+    }
     .btn kbd { font: 500 10px var(--mono); padding: 2px 6px; border: 1px solid currentColor; border-radius: 3px; opacity: 0.6; }
 
     /* ================= the chip ================= */
@@ -200,7 +205,7 @@
     .pins.l { left: -16px; }
     .pins.r { right: -16px; }
     .die {
-      position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 3px;
+      position: relative; width: 100%; aspect-ratio: 2067 / 3037; overflow: hidden; border-radius: 3px;
       background: #060a08; box-shadow: inset 0 0 0 1px rgba(214, 169, 92, 0.35), 0 0 40px rgba(214, 169, 92, 0.1); cursor: crosshair;
     }
     .die::before { /* scanning line */
@@ -235,16 +240,16 @@
 
     /* ================= responsive ================= */
     @media (max-height: 760px) and (min-width: 821px) {
-      :root { --chip: clamp(260px, min(33vw, 64vh), 440px); }
+      :root { --chip: clamp(190px, min(28vw, 47vh), 400px); }
       .role { margin-top: 20px; }
       .actions { margin-top: 24px; }
     }
     @media (max-width: 820px) {
-      :root { --chip: min(62vw, 34vh, 300px); }
+      :root { --chip: min(52vw, 28vh, 240px); }
       .stage { grid-template-columns: 1fr; align-content: center; justify-items: center; text-align: center; gap: 34px; padding-top: 56px; padding-bottom: 56px; }
       .chip-wrap { order: -1; margin-right: 0; }
-      .name { font-size: clamp(44px, 14vw, 86px); }
-      .name .line + .line { padding-left: 0; }
+      .name { font-size: clamp(22px, 7.2vw, 44px); }
+      .name .line:last-child { padding-left: 0; }
       .kicker { justify-content: center; margin-bottom: 12px; letter-spacing: 0.24em; }
       .kicker::before { display: none; }
       .role { margin-top: 16px; font-size: 10.5px; letter-spacing: 0.16em; }
@@ -283,13 +288,15 @@
 
   <main class="stage">
     <section class="identity" id="identity">
-      <h1 class="name" aria-label="Rowan P. Dogwe">
-        <span class="line" data-word="ROWAN P." aria-hidden="true"></span>
+      <h1 class="name" aria-label="Rowan Pacha-eo Dogwe">
+        <span class="line" data-word="ROWAN" aria-hidden="true"></span>
+        <span class="line" data-word="PACHA-EO" aria-hidden="true"></span>
         <span class="line" data-word="Dogwe" aria-hidden="true"></span>
       </h1>
       <div class="actions">
         <button class="btn primary" id="enter" type="button">Personal info</button>
         <a class="btn ghost" href="achievements.html" data-warp>Achievements</a>
+        <a class="btn ghost" href="family.html" data-warp>Family &amp; Friends</a>
       </div>
     </section>
 
@@ -299,7 +306,7 @@
           <span class="pins t"></span><span class="pins r"></span><span class="pins b"></span><span class="pins l"></span>
           <div class="die" id="die">
             <canvas id="portrait" aria-hidden="true"></canvas>
-            <img src="photo.jpg" alt="Formal photograph of Rowan P. Dogwe">
+            <img src="me-home.jpg" alt="Full-length formal photograph of Rowan P. Dogwe">
             <span class="corner a"></span><span class="corner b"></span><span class="corner c"></span><span class="corner d"></span>
           </div>
           <div class="marking">
@@ -312,11 +319,9 @@
   </main>
 
   <footer class="bar bottom">
-    <a class="step prev" href="family.html" data-warp aria-keyshortcuts="ArrowLeft">&larr; <em>0x03</em> Family &amp; friends</a>
     <span class="led"><i></i> System ready &middot; clk 1&nbsp;Hz</span>
     <span class="hint" id="hint">Hover the chip to read the bits &middot; click anywhere to strike</span>
     <span class="coords">16.40&deg;N &middot; 120.59&deg;E</span>
-    <a class="step next" href="personal-info.html" data-warp aria-keyshortcuts="ArrowRight"><em>0x01</em> Personal info &rarr;</a>
   </footer>
 
   <div id="probe" aria-hidden="true"><span class="ring"></span><span class="read" id="probeRead"></span></div>
@@ -642,31 +647,31 @@
 
     /* ================= portrait: binary -> photo ================= */
     var pc = $("#portrait"), px = pc.getContext("2d"), img = new Image();
-    var COLS = 46, lum = null, bits = [], reveal = [], lens = null, portraitDirty = true, portraitReady = false;
+    var COLS = 34, ROWS = 50, lum = null, bits = [], reveal = [], lens = null, portraitDirty = true, portraitReady = false;
     var PSTART = reduce ? 0 : 900, PSPAN = reduce ? 0 : 1700;
     img.onload = function () {
-      var o = document.createElement("canvas"); o.width = o.height = COLS;
-      var oc = o.getContext("2d"); oc.drawImage(img, 0, 0, COLS, COLS); var vals = [];
-      try { var data = oc.getImageData(0, 0, COLS, COLS).data; for (var i = 0; i < COLS * COLS; i++) vals.push((0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2]) / 255); }
-      catch (e) { for (var j = 0; j < COLS * COLS; j++) vals.push(0.6); }
-      var median = vals.slice().sort()[Math.floor(vals.length / 2)], R = rng(7), max = Math.hypot(COLS / 2, COLS / 2);
+      var o = document.createElement("canvas"); o.width = COLS; o.height = ROWS;
+      var oc = o.getContext("2d"); oc.drawImage(img, 0, 0, COLS, ROWS); var vals = [];
+      try { var data = oc.getImageData(0, 0, COLS, ROWS).data; for (var i = 0; i < COLS * ROWS; i++) vals.push((0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2]) / 255); }
+      catch (e) { for (var j = 0; j < COLS * ROWS; j++) vals.push(0.6); }
+      var median = vals.slice().sort()[Math.floor(vals.length / 2)], R = rng(7), max = Math.hypot(COLS / 2, ROWS / 2);
       lum = vals;
-      for (var k = 0; k < COLS * COLS; k++) {
+      for (var k = 0; k < COLS * ROWS; k++) {
         bits.push(vals[k] > median ? 1 : 0);
-        reveal.push((Math.hypot(k % COLS - COLS / 2, Math.floor(k / COLS) - COLS / 2) / max) * PSPAN * 0.75 + R() * PSPAN * 0.25);
+        reveal.push((Math.hypot(k % COLS - COLS / 2, Math.floor(k / COLS) - ROWS / 2) / max) * PSPAN * 0.75 + R() * PSPAN * 0.25);
       }
       portraitReady = true; portraitDirty = true;
     };
     img.onerror = function () { document.documentElement.classList.add("no-canvas"); };
-    img.src = "photo.jpg";
+    img.src = "me-home.jpg";
     function drawPortrait(now) {
-      var s = pc.clientWidth; if (!s) return;
-      if (pc.width !== Math.round(s * DPR)) pc.width = pc.height = Math.round(s * DPR);
+      var s = pc.clientWidth, sh = pc.clientHeight; if (!s || !sh) return;
+      if (pc.width !== Math.round(s * DPR) || pc.height !== Math.round(sh * DPR)) { pc.width = Math.round(s * DPR); pc.height = Math.round(sh * DPR); }
       px.setTransform(DPR, 0, 0, DPR, 0, 0);
       var t = now - T0, cell = s / COLS, anyHidden = false, lr = s * 0.2;
-      px.drawImage(img, 0, 0, s, s);
+      px.drawImage(img, 0, 0, s, sh);
       px.font = "500 " + (cell * 1.02).toFixed(2) + "px 'JetBrains Mono', monospace"; px.textAlign = "center"; px.textBaseline = "middle";
-      for (var i = 0; i < COLS * COLS; i++) {
+      for (var i = 0; i < COLS * ROWS; i++) {
         var x = i % COLS, y = Math.floor(i / COLS), cx = (x + 0.5) * cell, cy = (y + 0.5) * cell;
         var hidden = t < PSTART + reveal[i], dl = lens ? Math.hypot(cx - lens[0], cy - lens[1]) : 1e9, inLens = dl < lr;
         if (hidden) anyHidden = true;
@@ -704,7 +709,7 @@
         if (t >= nameTimes[i] + 420) { c.classList.add("on"); tone(520 + i * 40, 0.03, 0.02); }
         else if (t >= nameTimes[i]) c.lastChild.textContent = Math.random() < 0.5 ? "0" : "1";
       });
-      if (done) { nameDone = true; lines[1].classList.add("metal"); measureChars(); }
+      if (done) { nameDone = true; lines[lines.length - 1].classList.add("metal"); measureChars(); }
     }
     function measureChars() { charRects = chars.map(function (c) { var r = c.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }); }
     function magnet() { /* letters lean toward the cursor */
@@ -789,7 +794,7 @@
       if (seen && !reduce) { document.body.classList.add("chip-on"); flags.chip = true; PSTART = 0; READY_AT = 900; }
       if (reduce) { /* reduced motion: show the finished state at once */
         document.body.classList.add("chip-on", "ready"); flags.chip = flags.ready = true;
-        chars.forEach(function (c) { c.classList.add("on"); }); nameDone = true; lines[1].classList.add("metal"); measureChars();
+        chars.forEach(function (c) { c.classList.add("on"); }); nameDone = true; lines[lines.length - 1].classList.add("metal"); measureChars();
       } else if (fromIntro) {
         /* the bits already assembled the name and the binary portrait: lock them in */
         document.body.classList.add("chip-on"); flags.chip = true;
@@ -809,7 +814,7 @@
       if (!e.persisted) return;
       ocStart = 0; document.body.classList.remove("warping");
       chars.forEach(function (c) { c.style.transform = ""; });
-      lines[1].classList.remove("metal"); requestAnimationFrame(function () { lines[1].classList.add("metal"); });
+      lines[lines.length - 1].classList.remove("metal"); requestAnimationFrame(function () { lines[lines.length - 1].classList.add("metal"); });
     });
     addEventListener("resize", function () { if (!live) return; build(); measureChars(); portraitDirty = true; });
 
@@ -835,7 +840,7 @@
 
       /* targets: every cell of the binary portrait ... */
       var P = [], dr = $("#die").getBoundingClientRect(), cell = dr.width / COLS;
-      for (var i = 0; i < COLS * COLS; i++) {
+      for (var i = 0; i < COLS * ROWS; i++) {
         P.push({ tx: dr.left + (i % COLS + 0.5) * cell, ty: dr.top + (Math.floor(i / COLS) + 0.5) * cell, d: bits[i], a: 0.18 + 0.82 * lum[i], sz: cell * 1.25, name: false });
       }
       /* ... plus points sampled from the shapes of the letters of the name */
@@ -906,7 +911,7 @@
             var shown = Math.min(N, Math.pow(2, Math.floor((t - SPLIT) / LEVEL_MS) + 1) - 1);
             setCap(fmt(shown), shown === 1 ? "bit" : "bits");
           } else if (t < CONV + FLY) setCap(fmt(N) + " bits", "assembling");
-          else setCap("1 <i>person.</i>", "Rowan P. Dogwe");
+          else setCap("1 <i>person.</i>", "Rowan Pacha-eo Dogwe");
         }
         gI.globalAlpha = 1; gI.globalCompositeOperation = "source-over";
 
@@ -939,7 +944,7 @@
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(begin); setTimeout(begin, 1800); } else begin();
   })();
   </script>
-  <script src="warp.js?v=20261114072801"></script>
-  <noscript><style>#intro{display:none}.chip-wrap,.bar,.kicker,.role,.actions{opacity:1!important;transform:none!important}.die img{opacity:1!important}</style><p style="position:fixed;left:7vw;top:40vh;z-index:9;font:400 64px Georgia,serif">Rowan P. Dogwe</p></noscript>
+  <script src="warp.js?v=20261122215043"></script>
+  <noscript><style>#intro{display:none}.chip-wrap,.bar,.kicker,.role,.actions{opacity:1!important;transform:none!important}.die img{opacity:1!important}</style><p style="position:fixed;left:7vw;top:40vh;z-index:9;font:400 64px Georgia,serif">Rowan Pacha-eo Dogwe</p></noscript>
 </body>
 </html>
