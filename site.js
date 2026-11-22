@@ -329,7 +329,7 @@ document.querySelectorAll(".rail").forEach(function (r) {
 
 /* ---------- Achievements timeline: circuit traces from each card to its date on the bus ---------- */
 (function () {
-  var tl = document.querySelector(".tl"); if (!tl) return;
+  var tl = document.querySelector(".tml"); if (!tl || !tl.querySelector(".tl-traces")) return;
   var svg = tl.querySelector(".tl-traces"), NS = "http://www.w3.org/2000/svg";
   function scale() { var m = document.querySelector(".mid-in"); return (m && parseFloat(m.style.getPropertyValue("--s"))) || 1; }
   function draw() {

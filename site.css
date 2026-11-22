@@ -1111,8 +1111,8 @@ ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
 @media (min-width: 861px) { .pi .pi-name { font-size: clamp(34px, min(4.4vw, 7.4vh), 84px); } .pi-contact { margin-top: clamp(6px, 1.4vh, 26px); } }
 
 /* ===== v32 — Achievements as a timeline: education above the bus, extracurricular & work below ===== */
-.tl { position: relative; display: flex; flex-direction: column; min-height: 0; }
-.tl > .cx { position: relative; z-index: 1; }
+.tml { position: relative; display: flex; flex-direction: column; min-height: 0; }
+.tml > .cx { position: relative; z-index: 1; }
 .tl-traces { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; overflow: visible; }
 .tl-traces path { fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; opacity: 0.85; }
 .tl-traces path.bot { stroke-dasharray: 5 4; }
@@ -1131,24 +1131,24 @@ ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
 .tl-nodes li.hot b { transform: scale(1.12); box-shadow: 0 0 0 3px var(--bg), 0 0 22px rgba(246, 220, 162, 0.9); }
 .tl-nodes b { transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .tl-traces path.hot { stroke: var(--gold-hi); stroke-width: 2.4; opacity: 1; }
-.tl [data-tl].hot { outline: 1.5px solid var(--gold-hi); outline-offset: 2px; }
+.tml [data-tl].hot { outline: 1.5px solid var(--gold-hi); outline-offset: 2px; }
 @media (min-width: 861px) {
-  .mid-in > .tl { flex: 1 1 auto; }
-  .tl > .cx.edu { max-width: none; width: auto; display: block; }
-  .tl > .acts { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
-  .tl > .acts > .cx-h { order: 2; margin: clamp(6px, 1vh, 10px) 0 0; }
-  .tl > .acts > .items.tl-row { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: clamp(8px, 0.9vw, 14px); align-items: stretch; }
+  .mid-in > .tml { flex: 1 1 auto; }
+  .tml > .cx.edu { max-width: none; width: auto; display: block; }
+  .tml > .acts { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+  .tml > .acts > .cx-h { order: 2; margin: clamp(6px, 1vh, 10px) 0 0; }
+  .tml > .acts > .items.tl-row { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: clamp(8px, 0.9vw, 14px); align-items: stretch; }
   .tl-row > .it.has-ph { margin: 0 !important; padding: clamp(8px, 1vh, 12px) clamp(8px, 0.8vw, 12px) !important; border: 1px solid var(--line-2) !important; border-radius: 3px; min-height: clamp(150px, 24vh, 260px); }
 }
 @media (max-width: 860px) {
   .tl-traces, .tl-bus { display: none; }
-  .tl { gap: 12px; }
+  .tml { gap: 12px; }
   .tl-row { grid-template-columns: 1fr; }
 }
 /* v32b — room for the traces, a wider Combatics card, larger overall */
 .tl-bus { height: 96px; }
 @media (min-width: 861px) {
-  .tl > .acts > .items.tl-row { grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); }
+  .tml > .acts > .items.tl-row { grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); }
   .tl-row > .it.has-ph { min-height: 0; }
   .tl-row .mtab { column-gap: 6px; }
   .tl-row .mtab .ev em { display: none; }
