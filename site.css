@@ -1170,3 +1170,21 @@ ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
 .ach3 .rp img, .ach3 .ph img, .ach3 .slot img, .ach3 .phs-i img { transition: none !important; }
 .ach3 .rp:hover img, .ach3 .ph:hover img, .ach3 .slot:hover img, .ach3 .phs-i:hover img { transform: none !important; filter: none !important; }
 .ach3 span.rp, .ach3 span.ph, .ach3 span.slot, .ach3 span.phs-i { display: block; }
+
+/* v35 - bright metallic gold for filled surfaces (light mode used the darker text gold) */
+:root { --gold-fill: #d9ad4f; --gold-edge: #c3962f; --gold-grad: linear-gradient(180deg, #f4dc95 0%, #dfb556 48%, #c9982f 100%); --gold-grad-hi: linear-gradient(180deg, #faE8b4 0%, #ecc86f 50%, #d6a842 100%); }
+:root[data-theme="dark"] { --gold-fill: #d9ad4f; --gold-edge: #b8892c; --gold-grad: linear-gradient(180deg, #f1d38a 0%, #d9ad4f 50%, #b8892c 100%); }
+.step.next, .pi-tabs button.on, .ea-steps a[aria-current="page"], .est.now .tag, .cx-h em, .tl-nodes b { background: var(--gold-grad); border-color: var(--gold-edge); color: #111; }
+.step.next:hover { background: var(--gold-grad-hi); border-color: var(--gold-edge); }
+.tl-nodes li.bot b { background: var(--bg); color: var(--gold); border-color: var(--gold-fill); }
+.tl-bus::before { background: linear-gradient(90deg, var(--gold-dim), var(--gold-fill) 30%, var(--gold-hi) 70%, var(--gold-fill)); }
+.kicker::before, .hob li::before, .xp-card li::before, .job li::before, .shs-awards li::before { background: var(--gold-fill); }
+.pi-tabs button.on, .ea-steps a[aria-current="page"] { box-shadow: 0 3px 0 var(--gold-edge); }
+/* v35b - button ledges/underlines use the bright gold, like the active menu button */
+.step.prev { box-shadow: 0 4px 0 var(--gold-hi), 0 12px 26px rgba(0, 0, 0, 0.22); }
+.step.prev:hover { box-shadow: 0 6px 0 var(--gold-hi), 0 14px 30px rgba(0, 0, 0, 0.28); }
+.nav a:hover { box-shadow: 0 5px 0 var(--gold-hi), 0 12px 26px rgba(176, 131, 39, 0.25); border-color: var(--gold-hi); }
+.step.next { box-shadow: 0 4px 0 var(--gold-edge), 0 0 0 0 rgba(217, 173, 79, 0.55), 0 12px 26px rgba(176, 131, 39, 0.35); }
+.step.next:hover { box-shadow: 0 6px 0 var(--gold-edge), 0 14px 30px rgba(176, 131, 39, 0.45); }
+.pi-tabs button.on, .ea-steps a[aria-current="page"] { box-shadow: 0 3px 0 var(--gold-edge); }
+@keyframes nextGlow { 50% { box-shadow: 0 4px 0 var(--gold-edge), 0 0 0 7px rgba(217, 173, 79, 0), 0 12px 26px rgba(176, 131, 39, 0.35); } }

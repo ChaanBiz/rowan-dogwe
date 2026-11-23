@@ -11,11 +11,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="warp.css?v=20261123000326">
+  <link rel="stylesheet" href="warp.css?v=20261123120540">
   <style>
     :root {
       --bg: #fbfaf6;
-      --gold: #b08327;
+      --gold: #b08327; --gold-edge: #c3962f; --gold-grad: linear-gradient(180deg, #f4dc95 0%, #dfb556 48%, #c9982f 100%); --gold-grad-hi: linear-gradient(180deg, #fae8b4 0%, #ecc86f 50%, #d6a842 100%);
       --gold-hi: #d9ad4f;
       --gold-soft: rgba(176, 131, 39, 0.55);
       --gold-dim: rgba(176, 131, 39, 0.28);
@@ -83,7 +83,7 @@
     .bar .step em { font-style: normal; font-weight: 500; opacity: 0.7; }
     .bar .step.prev { background: var(--solid); color: var(--on-solid); border: 1px solid var(--solid); }
     .bar .step.prev:hover { transform: translateX(-3px); }
-    .bar .step.next { background: var(--gold); color: #111; border: 1px solid var(--gold); }
+    .bar .step.next { background: var(--gold-grad); color: #111; border: 1px solid var(--gold-edge); }
     .bar .step.next:hover { transform: translateX(3px); box-shadow: 0 10px 26px rgba(214, 169, 92, 0.35); }
     .bar .step.kbd-hit { transform: scale(0.96); }
     .bar.bottom > * { white-space: nowrap; }
@@ -159,10 +159,10 @@
       font: 600 12.5px var(--mono); letter-spacing: 0.2em; text-transform: uppercase;
       text-decoration: none; cursor: pointer; padding: 15px 24px; border-radius: 2px; transition: 0.2s;
     }
-    .btn.primary { background: var(--gold); color: #111; border: 1px solid var(--gold); box-shadow: 0 0 0 rgba(214, 169, 92, 0); }
+    .btn.primary { background: var(--gold-grad); color: #111; border: 1px solid var(--gold-edge); box-shadow: 0 0 0 rgba(214, 169, 92, 0); }
     .btn.primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%); transform: translateX(-120%); animation: sweep 3.6s ease-in-out infinite 3s; }
     @keyframes sweep { 0%, 70% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
-    .btn.primary:hover { background: var(--gold-hi); border-color: var(--gold-hi); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(214, 169, 92, 0.35); }
+    .btn.primary:hover { background: var(--gold-grad-hi, var(--gold-hi)); border-color: var(--gold-edge); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(214, 169, 92, 0.35); }
     .btn.ghost { background: var(--solid); color: var(--on-solid); border: 1px solid var(--solid); }
     .btn.ghost:hover { border-color: var(--gold); color: var(--gold-hi); transform: translateY(-2px); }
     @media (min-width: 821px) and (max-width: 1240px) {
@@ -944,7 +944,7 @@
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(begin); setTimeout(begin, 1800); } else begin();
   })();
   </script>
-  <script src="warp.js?v=20261123000326"></script>
+  <script src="warp.js?v=20261123120540"></script>
   <noscript><style>#intro{display:none}.chip-wrap,.bar,.kicker,.role,.actions{opacity:1!important;transform:none!important}.die img{opacity:1!important}</style><p style="position:fixed;left:7vw;top:40vh;z-index:9;font:400 64px Georgia,serif">Rowan Pacha-eo Dogwe</p></noscript>
 </body>
 </html>

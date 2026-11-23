@@ -325,6 +325,8 @@ document.querySelectorAll(".rail").forEach(function (r) {
   var t; function soon() { clearTimeout(t); t = setTimeout(fit, 60); }
   fit(); addEventListener("load", fit); addEventListener("resize", soon);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  /* late-loading pictures can make the cards taller after fitting: re-fit when each one arrives */
+  inner.querySelectorAll("img").forEach(function (im) { if (!im.complete) im.addEventListener("load", soon, { once: true }); });
 })();
 
 /* ---------- Achievements timeline: circuit traces from each card to its date on the bus ---------- */
