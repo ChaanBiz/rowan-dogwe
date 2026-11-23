@@ -1188,3 +1188,22 @@ ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
 .step.next:hover { box-shadow: 0 6px 0 var(--gold-edge), 0 14px 30px rgba(176, 131, 39, 0.45); }
 .pi-tabs button.on, .ea-steps a[aria-current="page"] { box-shadow: 0 3px 0 var(--gold-edge); }
 @keyframes nextGlow { 50% { box-shadow: 0 4px 0 var(--gold-edge), 0 0 0 7px rgba(217, 173, 79, 0), 0 12px 26px rgba(176, 131, 39, 0.35); } }
+/* v36 - longer personal captions on Family & Friends: smaller text so all four cards fit one screen */
+@media (min-width: 861px) {
+  .ff-card figcaption p { font-size: clamp(11px, min(0.82vw, 1.5vh), 14px); line-height: 1.42; }
+}
+@media (min-width: 861px) and (max-height: 820px) {
+  .ff-card { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .ff-card figcaption p { font-size: clamp(10.5px, min(0.8vw, 1.45vh), 13px); line-height: 1.38; }
+}
+@media (min-width: 861px) and (max-width: 1100px) and (max-height: 820px) {
+  .ff-card { grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr); }
+}
+@media (min-width: 861px) and (max-width: 1100px) and (max-height: 760px) {
+  .ff-card figcaption p { font-size: clamp(10px, 1.42vh, 12px); line-height: 1.32; }
+  .ff-card { padding: 10px; }
+}
+@media (min-width: 861px) and (max-height: 680px) {
+  .ff-card { grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr); padding: 9px; }
+  .ff-card figcaption p { font-size: 10px; line-height: 1.3; }
+}
