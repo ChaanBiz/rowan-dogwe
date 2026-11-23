@@ -63,6 +63,7 @@
   /* ---------- contact details are kept out of the page source (anti-scraping) ---------- */
   function dec(v) { try { return decodeURIComponent(escape(atob(v))); } catch (e) { return ""; } }
   document.querySelectorAll("[data-c]").forEach(function (n) { n.textContent = dec(n.getAttribute("data-c")); });
+  document.querySelectorAll("[data-mail]").forEach(function (n) { n.setAttribute("href", "mailto:" + dec(n.getAttribute("data-mail"))); });
   document.querySelectorAll("[data-tel]").forEach(function (n) { n.setAttribute("href", "tel:" + dec(n.getAttribute("data-tel"))); });
 
 
