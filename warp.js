@@ -452,6 +452,7 @@
     if (busy) return; opts = opts || {};
     var to = fileOf(href), page = pageOf(href);
     if (reduce) { location.href = href; return; }
+    if (isInner(to) && isInner(fileOf(location.href))) { busGo(href, to); return; }
     busy = true; window.__warpBusy = true;
     var pre = document.createElement("link"); pre.rel = "prefetch"; pre.href = href; document.head.appendChild(pre);
     mount(); box.classList.add("block"); box.style.background = "transparent"; box.style.opacity = "1";
@@ -471,11 +472,13 @@
     window.dispatchEvent(new CustomEvent("warp:out", { detail: { to: to } }));
     hum(70, 900, 2.0); tick(700);
 
+    var SP = (to === "index.html" || fileOf(location.href) === "index.html") ? 1 : 2;   /* home <-> page: full trip; page <-> page: twice as fast */
     var CHARGE = 380, NAV = 1900, t0 = performance.now(), lastT = t0, navd = false;
     var camFollow = [W / 2, H * 0.6];
     function frame(now) {
       if (!busy) return;
-      var t = now - t0, dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+      now = t0 + (now - t0) * SP;
+      var t = now - t0, dt = Math.min(0.05 * SP, (now - lastT) / 1000); lastT = now;
       /* 1. charge: the chip lights up, the bus grows out of its top pins */
       src.lit = clamp(t / CHARGE, 0, 1) * (1 - clamp((t - 900) / 500, 0, 1));
       world.maxD = 2600 * eOut(clamp(t / 900, 0, 1)) + world.d;
@@ -510,7 +513,7 @@
 
       if (!navd && t > NAV) {
         navd = true;
-        try { sessionStorage.setItem(KEY, JSON.stringify({ to: to, v: world.v, f: f, seed: seed, ts: Date.now() })); } catch (e) {}
+        try { sessionStorage.setItem(KEY, JSON.stringify({ to: to, v: world.v, f: f, seed: seed, sp: SP, ts: Date.now() })); } catch (e) {}
         location.href = href;
       }
       requestAnimationFrame(frame);
@@ -548,9 +551,11 @@
     function skip() { if (!skipAt) skipAt = performance.now(); }
     box.addEventListener("click", skip); addEventListener("keydown", skip, { once: true });
 
+    var SP = state.sp === 2 ? 2 : 1, off = 0;
     function frame(now) {
-      var t = now - t0, dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
-      if (skipAt && t < FADE0) { t0 -= (FADE0 - t); t = FADE0; skipAt = 0; }
+      now = t0 + (now - t0) * SP + off;
+      var t = now - t0, dt = Math.min(0.05 * SP, (now - lastT) / 1000); lastT = now;
+      if (skipAt && t < FADE0) { off += FADE0 - t; now += FADE0 - t; t = FADE0; skipAt = 0; }
       var pa = clamp(t / T, 0, 1);
       world.d = Ls * (1 - Math.pow(1 - pa, 3)); world.v = pa < 1 ? 3 * Ls / (T / 1000) * Math.pow(1 - pa, 2) : 0;
       world.fxA = 1 - clamp((t - BLEND0) / (T - BLEND0), 0, 1);
@@ -594,6 +599,57 @@
   }
   function finish() { unmount(); busy = false; window.__warpBusy = false; document.body.style.visibility = ""; }
 
+
+  /* ======================================================================
+     DATA BUS: the quick transition between the three inner pages
+     (any trip to or from Home keeps the full signal flight above)
+     ====================================================================== */
+  var ORDER = ["personal-info.html", "achievements.html", "family.html"];
+  function isInner(f) { return ORDER.indexOf(f) >= 0; }
+  function busBox(dir, fromP, toP) {
+    var b = document.createElement("div"); b.id = "bus"; b.className = "dir-" + dir; b.setAttribute("aria-hidden", "true");
+    var lines = ""; for (var i = 0; i < 7; i++) lines += '<i style="--d:' + (0.42 + (i * 37 % 23) / 60).toFixed(2) + 's;--dl:-' + ((i * 53 % 31) / 60).toFixed(2) + 's"></i>';
+    var bits = ""; for (var j = 0; j < 24; j++) bits += Math.random() < 0.5 ? "0" : "1";
+    b.innerHTML = '<div class="b-face"><div class="b-lines">' + lines + '</div><div class="b-tag"><span>' + fromP.idx + ' &rarr; ' + toP.idx + '</span><b>' + toP.html + '</b><em>' + bits + '</em></div></div><div class="b-head"></div>';
+    root.appendChild(b); return b;
+  }
+  /* p: 0..1 how far the head has travelled; covering = page being written out */
+  function busSet(b, dir, p, covering) {
+    var x = (dir === "r" ? p : 1 - p) * 100, face = b.firstChild, head = b.lastChild;
+    if (covering) face.style.clipPath = dir === "r" ? "inset(0 " + (100 - x) + "% 0 0)" : "inset(0 0 0 " + x + "%)";
+    else face.style.clipPath = dir === "r" ? "inset(0 0 0 " + x + "%)" : "inset(0 " + (100 - x) + "% 0 0)";
+    head.style.left = x + "%";
+    head.style.opacity = String(Math.min(1, Math.min(p, 1 - p) * 14 + 0.15));
+  }
+  function busRun(b, dir, ms, covering, done) {
+    var t0 = performance.now();
+    (function f(now) {
+      var p = clamp((now - t0) / ms, 0, 1), e = covering ? eIn(p) * 0.35 + eInOut(p) * 0.65 : eOut(p);
+      busSet(b, dir, e, covering);
+      if (p < 1) requestAnimationFrame(f); else done();
+    })(t0);
+  }
+  function busGo(href, to) {
+    var here = fileOf(location.href), dir = ORDER.indexOf(to) > ORDER.indexOf(here) ? "r" : "l";
+    busy = true; window.__warpBusy = true;
+    var pre = document.createElement("link"); pre.rel = "prefetch"; pre.href = href; document.head.appendChild(pre);
+    var b = busBox(dir, PAGES[here], PAGES[to]); busSet(b, dir, 0, true); tick(500);
+    busRun(b, dir, 380, true, function () {
+      try { sessionStorage.setItem(KEY, JSON.stringify({ to: to, mode: "bus", dir: dir, from: here, ts: Date.now() })); } catch (e) {}
+      location.href = href;
+    });
+  }
+  function busIn(state) {
+    window.__warpBusy = true; root.classList.remove("warp-in");
+    var to = fileOf(location.href), b = busBox(state.dir === "l" ? "l" : "r", PAGES[state.from] || PAGES["index.html"], PAGES[to] || pageOf(location.href));
+    busSet(b, state.dir, 0, false);
+    /* site.js loads after this file: announce the reveal once its listener exists */
+    setTimeout(function () {
+      window.dispatchEvent(new CustomEvent("warp:reveal"));
+      busRun(b, state.dir, 440, false, function () { b.remove(); window.__warpBusy = false; });
+    }, 90);
+  }
+
   /* ---------- wiring ---------- */
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("a[data-warp]");
@@ -606,6 +662,7 @@
   addEventListener("pageshow", function (e) {
     if (!e.persisted) return;
     busy = false; window.__warpBusy = false; unmount(); root.classList.remove("warp-in");
+    var ob = document.getElementById("bus"); if (ob) ob.remove();
     if (srcEl) srcEl.style.visibility = "";
     document.body.style.transform = ""; document.body.style.visibility = "";
     P = palette();
@@ -619,7 +676,8 @@
   if (arriving) {
     W = innerWidth; H = innerHeight;
     /* wait one frame so the page has laid out and the chip can be measured */
-    requestAnimationFrame(function () { arrive(state); });
+    if (state.mode === "bus") busIn(state);
+    else requestAnimationFrame(function () { arrive(state); });
   } else root.classList.remove("warp-in");
 
   window.Warp = { go: go, pages: PAGES, arriving: arriving, theme: theme };

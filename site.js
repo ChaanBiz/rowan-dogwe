@@ -303,7 +303,7 @@ document.querySelectorAll(".rail").forEach(function (r) {
   /* scale the whole middle (text AND pictures) so it fills the space between the menu and the bottom buttons
      exactly: smaller screens shrink it, bigger screens grow it. Width is set to 100/s % so it always spans
      the full width, edge to edge. */
-  var SMIN = 0.55, SMAX = 1.9;
+  var SMIN = 0.5, SMAX = 1.9;
   function apply(s) { inner.style.width = (100 / s) + "%"; inner.style.transform = "scale(" + s + ")"; inner.style.setProperty("--s", s); }
   function fit() {
     reset(); root.classList.remove("ach-nohead"); bumpText();
@@ -354,7 +354,24 @@ document.querySelectorAll(".rail").forEach(function (r) {
   /* traces: card -> its bar / pin, routed in lanes so they never overlap */
   function draw() {
     while (svg.firstChild) svg.removeChild(svg.firstChild);
-    if (innerWidth <= 860) return;
+    if (!document.querySelector(".ach3.board")) return;
+    /* v44 board: a stem from each card straight to its own bar (elbow only when the card cannot sit over its bar) */
+    var s0 = scale(), T0 = tl.getBoundingClientRect(), Q = function (x, y) { return [(x - T0.left) / s0, (y - T0.top) / s0]; };
+    items.forEach(function (it) {
+      if (!it.card) return;
+      var cr = it.card.getBoundingClientRect(), tgt = it.el.classList.contains("yp") ? it.el.querySelector("i") : it.el, br = tgt.getBoundingClientRect();
+      var lo = Math.max(cr.left + 14, br.left + 4), hi = Math.min(cr.right - 14, br.right - 4);
+      var y1 = it.top ? cr.bottom : cr.top, y2 = it.top ? br.top : br.bottom, d;
+      if (lo <= hi) { var x = (lo + hi) / 2; var a = Q(x, y1), b = Q(x, y2); d = "M" + a[0].toFixed(1) + " " + a[1].toFixed(1) + " V" + b[1].toFixed(1); }
+      else {
+        var bx = br.left + br.width / 2, cx = bx < cr.left ? cr.left + 18 : cr.right - 18, mid = (y1 + y2) / 2;
+        var a1 = Q(cx, y1), m1 = Q(cx, mid), m2 = Q(bx, mid), b1 = Q(bx, y2);
+        d = "M" + a1[0].toFixed(1) + " " + a1[1].toFixed(1) + " V" + m1[1].toFixed(1) + " H" + m2[0].toFixed(1) + " V" + b1[1].toFixed(1);
+      }
+      var p = document.createElementNS(NS, "path"); p.setAttribute("d", d); p.setAttribute("data-for", it.k); if (it.on) p.classList.add("lit"); svg.appendChild(p);
+      var st = d.match(/^M([\d.]+) ([\d.]+)/), c = document.createElementNS(NS, "circle"); c.setAttribute("cx", st[1]); c.setAttribute("cy", st[2]); c.setAttribute("r", 3.4); svg.appendChild(c);
+    });
+    return;
     var s = scale(), T = tl.getBoundingClientRect(), P = function (x, y) { return [(x - T.left) / s, (y - T.top) / s]; };
     var links = items.filter(function (it) { return it.card; }).map(function (it) {
       var cr = it.card.getBoundingClientRect(), tr = (it.el.querySelector("i") || it.el).getBoundingClientRect();
@@ -408,18 +425,19 @@ document.querySelectorAll(".rail").forEach(function (r) {
   function apply(y, fade) {   /* y = the playhead's date as a decimal year */
     items.forEach(function (it) {
       var f = it.b > it.a ? Math.max(0, Math.min(1, (y - it.a) / (it.b - it.a))) : (y >= it.a ? 1 : 0);
-      if (fade < 1) f *= fade;
       if (Math.abs(f - it.f) > 0.002 || (f === 1 && it.f !== 1) || (f === 0 && it.f !== 0)) { it.f = f; it.el.style.setProperty("--f", f.toFixed(3)); }
       if (!it.el.classList.contains("yp")) { it.el.classList.toggle("lit", f >= 0.97); it.el.classList.toggle("go", f > 0); }
       setOn(it, fade > 0.05 && y >= it.a);
     });
     ticks.forEach(function (t) { t.el.classList.toggle("past", fade > 0.05 && y >= t.y); });
+    yr.style.setProperty("--fade", fade.toFixed(2));
   }
   var TRAVEL = 9000, HOLD = 3000, FADE = 800, t0 = performance.now() + 700;
   if (!reduce && innerWidth > 860) tl.classList.add("boot");
+  var bigY = document.querySelector(".jy-year b");
   function frame(now, once) {
-    if (innerWidth > 860) {
-      if (reduce) apply(NOW, 1);
+    if (true) {
+      if (reduce) { apply(NOW, 1); if (bigY) bigY.textContent = "Now"; }
       else {
         var t = now - t0, y = A, fade = 1, w = yr.offsetWidth;
         if (t >= 0) {
@@ -428,7 +446,7 @@ document.querySelectorAll(".rail").forEach(function (r) {
           else { y = NOW; if (t > TRAVEL + HOLD) fade = 1 - (t - TRAVEL - HOLD) / FADE; }
           var x = (y - A) / (B - A) * w;
           head.style.transform = "translateX(" + x.toFixed(1) + "px)"; head.classList.toggle("on", t < TRAVEL + HOLD);
-          var m = Math.min(11, Math.floor((y - Math.floor(y)) * 12)); hl.textContent = MON[m] + " " + Math.floor(y); head.classList.toggle("end", y >= NOW - 0.08);
+          var m = Math.min(11, Math.floor((y - Math.floor(y)) * 12)); hl.textContent = MON[m] + " " + Math.floor(y); head.classList.toggle("end", y >= NOW - 0.08); if (bigY) { var tx = y >= NOW - 0.08 ? "Now" : String(Math.floor(y)); if (bigY.textContent !== tx) bigY.textContent = tx; }
           apply(y, fade);
         }
       }
@@ -441,7 +459,11 @@ document.querySelectorAll(".rail").forEach(function (r) {
   addEventListener("load", function () { setTimeout(sync, 250); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(sync, 250); });
   setTimeout(sync, 400); setTimeout(sync, 1600);
-  if (reduce || innerWidth <= 860) Object.keys(counters).forEach(function (k) { counters[k].querySelector("b").textContent = totals[k]; });
+  if (reduce) Object.keys(counters).forEach(function (k) { counters[k].querySelector("b").textContent = totals[k]; });
+  /* hovering a card highlights its chapter on the ruler (nothing is clickable) */
+  items.forEach(function (it) { if (!it.card) return;
+    it.card.addEventListener("mouseenter", function () { it.card.classList.add("hot"); it.el.classList.add("hot"); });
+    it.card.addEventListener("mouseleave", function () { it.card.classList.remove("hot"); it.el.classList.remove("hot"); }); });
   if (!reduce) requestAnimationFrame(frame);
 })();
 
@@ -472,4 +494,16 @@ document.querySelectorAll(".rail").forEach(function (r) {
   var t; addEventListener("resize", function () { clearTimeout(t); t = setTimeout(draw, 120); });
   addEventListener("load", draw); if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
   setTimeout(draw, 300); setTimeout(draw, 1200);
+})();
+
+/* ---------- Family: parents' panels tilt toward the pointer ---------- */
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(hover: hover) and (min-width: 861px)").matches) return;
+  document.querySelectorAll("[data-tilt]").forEach(function (el) {
+    el.addEventListener("pointermove", function (e) {
+      var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      el.classList.add("tilting"); el.style.setProperty("--ry", (x * 8).toFixed(2) + "deg"); el.style.setProperty("--rx", (-y * 6).toFixed(2) + "deg");
+    });
+    el.addEventListener("pointerleave", function () { el.classList.remove("tilting"); el.style.setProperty("--ry", "0deg"); el.style.setProperty("--rx", "0deg"); });
+  });
 })();
