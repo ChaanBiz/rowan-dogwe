@@ -330,41 +330,146 @@ document.querySelectorAll(".rail").forEach(function (r) {
   inner.querySelectorAll("img").forEach(function (im) { if (!im.complete) im.addEventListener("load", soon, { once: true }); });
 })();
 
-/* ---------- Achievements timeline: circuit traces from each card to its date on the bus ---------- */
+/* ---------- Achievements timeline: a true year ruler (.yr). Schools are bars above the ruler, recognitions a bar and pins below.
+   Traces tie every card to its bar. A playhead sweeps the years (month + year readout): bars fill as it passes, a card powers on
+   (spark burst + unlock pop-up) when its bar starts, the trace carries current, and the counters count up. Holds at Now, then
+   runs again. ---------- */
 (function () {
-  var tl = document.querySelector(".tml"); if (!tl || !tl.querySelector(".tl-traces")) return;
-  var svg = tl.querySelector(".tl-traces"), NS = "http://www.w3.org/2000/svg";
+  var tl = document.querySelector(".tml"), yr = tl && tl.querySelector(".yr"), svg = tl && tl.querySelector(".tl-traces");
+  if (!yr || !svg) return;
+  var NS = "http://www.w3.org/2000/svg", reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var A = +yr.getAttribute("data-a"), B = +yr.getAttribute("data-b"), NOW = +yr.getAttribute("data-now");
+  var head = yr.querySelector(".yr-head"), hl = head.querySelector("em");
+  var items = [].slice.call(yr.querySelectorAll(".yb, .yp")).map(function (el) {
+    return { el: el, k: el.getAttribute("data-for"), a: +el.getAttribute("data-a"), b: +el.getAttribute("data-b"), kind: el.getAttribute("data-k"), n: +el.getAttribute("data-n") || 0,
+      pop: el.getAttribute("data-pop"), top: !!el.closest(".yr-edu"), card: tl.querySelector('[data-tl="' + el.getAttribute("data-for") + '"]'), on: null, f: -1 };
+  });
+  var ticks = [].slice.call(yr.querySelectorAll(".yt")).map(function (t) { return { el: t, y: +t.textContent }; });
+  var counters = {}; [].slice.call(document.querySelectorAll(".tl-count")).forEach(function (c) { counters[c.getAttribute("data-k")] = c; });
+  var totals = {}; items.forEach(function (it) { totals[it.kind] = (totals[it.kind] || 0) + it.n; });
+  var shown = {}, quiet = false;
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   function scale() { var m = document.querySelector(".mid-in"); return (m && parseFloat(m.style.getPropertyValue("--s"))) || 1; }
+
+  /* traces: card -> its bar / pin, routed in lanes so they never overlap */
   function draw() {
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     if (innerWidth <= 860) return;
-    var s = scale(), T = tl.getBoundingClientRect(), bus = tl.querySelector(".tl-bus").getBoundingClientRect();
-    var P = function (x, y) { return [(x - T.left) / s, (y - T.top) / s]; };
-    var busY = (bus.top + bus.height / 2 - T.top) / s, half = bus.height / 2 / s;
-    var links = [].slice.call(tl.querySelectorAll(".tl-nodes li")).map(function (n) {
-      var card = tl.querySelector('[data-tl="' + n.getAttribute("data-for") + '"]'), b = n.querySelector("b");
-      if (!card) return null;
-      var cr = card.getBoundingClientRect(), br = b.getBoundingClientRect(), top = n.classList.contains("top");
-      return { n: n, card: card, top: top, cx: P(cr.left + cr.width / 2, 0)[0], cy: P(0, top ? cr.bottom : cr.top)[1], nx: P(br.left + br.width / 2, 0)[0], ny: P(0, top ? br.top : br.bottom)[1] };
-    }).filter(Boolean);
-    ["top", "bot"].forEach(function (side) {
-      var L = links.filter(function (l) { return (side === "top") === l.top; });
-      L.sort(function (a, b) { return Math.abs(b.nx - b.cx) - Math.abs(a.nx - a.cx); });   /* longest run hugs the bus */
+    var s = scale(), T = tl.getBoundingClientRect(), P = function (x, y) { return [(x - T.left) / s, (y - T.top) / s]; };
+    var links = items.filter(function (it) { return it.card; }).map(function (it) {
+      var cr = it.card.getBoundingClientRect(), tr = (it.el.querySelector("i") || it.el).getBoundingClientRect();
+      var tx = it.el.classList.contains("yp") ? tr.left + tr.width / 2 : tr.left + Math.min(tr.width / 2, Math.max(10, tr.width * 0.5));
+      return { it: it, top: it.top, cx: P(cr.left + cr.width / 2, 0)[0], cy: P(0, it.top ? cr.bottom : cr.top)[1], nx: P(tx, 0)[0], ny: P(0, it.top ? tr.top : tr.bottom)[1] };
+    });
+    [true, false].forEach(function (top) {
+      var L = links.filter(function (l) { return l.top === top; });
+      L.sort(function (a, b) { return Math.abs(b.nx - b.cx) - Math.abs(a.nx - a.cx); });
       L.forEach(function (l, k) {
-        var lanes = L.length + 1, gap = Math.abs(l.ny - l.cy), laneY = l.top ? l.ny - (k + 1) * Math.min(7, (gap - 6) / lanes) : l.ny + (k + 1) * Math.min(7, (gap - 6) / lanes);
-        var d = "M" + l.cx.toFixed(1) + " " + l.cy.toFixed(1) + " V" + laneY.toFixed(1) + " H" + l.nx.toFixed(1) + " V" + l.ny.toFixed(1);
-        var p = document.createElementNS(NS, "path"); p.setAttribute("d", d); if (!l.top) p.setAttribute("class", "bot"); svg.appendChild(p);
+        var gap = Math.abs(l.ny - l.cy), step = Math.min(7, (gap - 6) / (L.length + 1)), laneY = top ? l.ny - (k + 1) * step : l.ny + (k + 1) * step;
+        var p = document.createElementNS(NS, "path");
+        p.setAttribute("d", "M" + l.cx.toFixed(1) + " " + l.cy.toFixed(1) + " V" + laneY.toFixed(1) + " H" + l.nx.toFixed(1) + " V" + l.ny.toFixed(1));
+        p.setAttribute("data-for", l.it.k); if (!top) p.setAttribute("class", "bot"); if (l.it.on) p.classList.add("lit"); svg.appendChild(p);
         var c = document.createElementNS(NS, "circle"); c.setAttribute("cx", l.cx); c.setAttribute("cy", l.cy); c.setAttribute("r", 3.4); c.setAttribute("class", "pad"); svg.appendChild(c);
         var c2 = document.createElementNS(NS, "circle"); c2.setAttribute("cx", l.nx); c2.setAttribute("cy", l.ny); c2.setAttribute("r", 2.2); svg.appendChild(c2);
-        l.path = p;
-        var on = function (v) { return function () { [l.card, l.n, p].forEach(function (e) { e.classList.toggle("hot", v); }); }; };
-        if (!l.card.__tl) { l.card.__tl = 1; }
       });
     });
   }
-  window.__tlDraw = draw;
-  var t; function soon() { clearTimeout(t); t = setTimeout(draw, 120); }
-  addEventListener("resize", soon); addEventListener("load", function () { setTimeout(draw, 200); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(draw, 250); });
-  setTimeout(draw, 400); setTimeout(draw, 1600);
+
+  function count() {
+    var sum = {}; items.forEach(function (it) { if (it.on) sum[it.kind] = (sum[it.kind] || 0) + it.n; });
+    Object.keys(counters).forEach(function (k) {
+      var v = sum[k] || 0; if (shown[k] === v) return; var up = v > (shown[k] || 0); shown[k] = v;
+      counters[k].querySelector("b").textContent = v;
+      if (up && !quiet) { counters[k].classList.remove("bump"); void counters[k].offsetWidth; counters[k].classList.add("bump"); }
+    });
+  }
+  function burst(it) {
+    var s = scale(), Y = yr.getBoundingClientRect(), r = (it.el.querySelector("i") || it.el).getBoundingClientRect();
+    var x = it.el.classList.contains("yp") ? (r.left + r.width / 2 - Y.left) / s : (r.left - Y.left) / s + 2, y = (r.top + r.height / 2 - Y.top) / s;
+    for (var k = 0; k < 14; k++) {
+      var ang = (k / 14) * Math.PI * 2 + Math.random() * 0.4, d = 16 + Math.random() * 20, sp = document.createElement("span");
+      sp.className = "tl-spark"; sp.style.left = x + "px"; sp.style.top = y + "px";
+      sp.style.setProperty("--dx", (Math.cos(ang) * d).toFixed(1) + "px"); sp.style.setProperty("--dy", (Math.sin(ang) * d).toFixed(1) + "px");
+      yr.appendChild(sp); setTimeout(function (e) { return function () { e.remove(); }; }(sp), 800);
+    }
+    if (!it.pop) return;
+    var pop = document.createElement("span"); pop.className = "tl-pop" + (it.top ? " up" : ""); pop.innerHTML = it.pop;
+    pop.style.left = Math.max(60, Math.min(yr.offsetWidth - 60, x + 30)) + "px"; pop.style.top = (it.top ? (r.top - Y.top) / s - 30 : (r.bottom - Y.top) / s + 6) + "px";
+    yr.appendChild(pop); setTimeout(function () { pop.remove(); }, 1750);
+  }
+  function setOn(it, on) {
+    if (it.on === on) return; it.on = on;
+    if (it.el.classList.contains("yp")) it.el.classList.toggle("lit", on);
+    if (it.card) { it.card.classList.toggle("lit", on); if (on) it.card.classList.add("on"); }
+    svg.querySelectorAll('path[data-for="' + it.k + '"]').forEach(function (p) { p.classList.toggle("lit", on); });
+    if (on && !reduce && !quiet) { it.el.classList.add("flash"); setTimeout(function () { it.el.classList.remove("flash"); }, 380); burst(it); }
+    count();
+  }
+  function apply(y, fade) {   /* y = the playhead's date as a decimal year */
+    items.forEach(function (it) {
+      var f = it.b > it.a ? Math.max(0, Math.min(1, (y - it.a) / (it.b - it.a))) : (y >= it.a ? 1 : 0);
+      if (fade < 1) f *= fade;
+      if (Math.abs(f - it.f) > 0.002 || (f === 1 && it.f !== 1) || (f === 0 && it.f !== 0)) { it.f = f; it.el.style.setProperty("--f", f.toFixed(3)); }
+      if (!it.el.classList.contains("yp")) { it.el.classList.toggle("lit", f >= 0.97); it.el.classList.toggle("go", f > 0); }
+      setOn(it, fade > 0.05 && y >= it.a);
+    });
+    ticks.forEach(function (t) { t.el.classList.toggle("past", fade > 0.05 && y >= t.y); });
+  }
+  var TRAVEL = 9000, HOLD = 3000, FADE = 800, t0 = performance.now() + 700;
+  if (!reduce && innerWidth > 860) tl.classList.add("boot");
+  function frame(now, once) {
+    if (innerWidth > 860) {
+      if (reduce) apply(NOW, 1);
+      else {
+        var t = now - t0, y = A, fade = 1, w = yr.offsetWidth;
+        if (t >= 0) {
+          t = t % (TRAVEL + HOLD + FADE);
+          if (t < TRAVEL) { var u = t / TRAVEL; u = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; u = 0.35 * u + 0.65 * (t / TRAVEL); y = A + (NOW - A) * u; }
+          else { y = NOW; if (t > TRAVEL + HOLD) fade = 1 - (t - TRAVEL - HOLD) / FADE; }
+          var x = (y - A) / (B - A) * w;
+          head.style.transform = "translateX(" + x.toFixed(1) + "px)"; head.classList.toggle("on", t < TRAVEL + HOLD);
+          var m = Math.min(11, Math.floor((y - Math.floor(y)) * 12)); hl.textContent = MON[m] + " " + Math.floor(y); head.classList.toggle("end", y >= NOW - 0.08);
+          apply(y, fade);
+        }
+      }
+    }
+    if (!once && !reduce) requestAnimationFrame(frame);
+  }
+  function sync() { draw(); quiet = true; frame(performance.now(), true); quiet = false; }
+  window.__tlDraw = sync;
+  var tm; addEventListener("resize", function () { clearTimeout(tm); tm = setTimeout(sync, 150); });
+  addEventListener("load", function () { setTimeout(sync, 250); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(sync, 250); });
+  setTimeout(sync, 400); setTimeout(sync, 1600);
+  if (reduce || innerWidth <= 860) Object.keys(counters).forEach(function (k) { counters[k].querySelector("b").textContent = totals[k]; });
+  if (!reduce) requestAnimationFrame(frame);
+})();
+
+/* ---------- Family & Friends: traces from the RPD hub to each card (left cards: out of the hub's left side; right cards: right side),
+   each with a pad at the card and a pulse of current flowing outward ---------- */
+(function () {
+  var ff = document.querySelector(".ff"), svg = ff && ff.querySelector(".ff-traces"), hub = ff && ff.querySelector(".ff-hub");
+  if (!svg || !hub) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function el(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); svg.appendChild(e); return e; }
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (innerWidth <= 860) return;
+    var F = ff.getBoundingClientRect(), H = hub.getBoundingClientRect(), hx = H.left + H.width / 2 - F.left, hy = H.top + H.height / 2 - F.top, hw = H.width / 2;
+    svg.setAttribute("viewBox", "0 0 " + F.width + " " + F.height);
+    [].slice.call(ff.querySelectorAll(".ff-card")).forEach(function (c, i) {
+      var r = c.getBoundingClientRect(), left = r.left + r.width / 2 < F.left + F.width / 2, top = r.top + r.height / 2 < F.top + F.height / 2;
+      var ex = (left ? r.right : r.left) - F.left, ey = r.top + r.height * (top ? 0.62 : 0.38) - F.top;   /* pad on the card edge facing the hub */
+      var sx = hx + (left ? -1 : 1) * Math.min(hw * 0.45, 12), sy = hy + (top ? -hw - 8 : hw + 8);         /* leave from a pin on the hub's top / bottom */
+      var mx = sx;
+      var d = "M" + sx.toFixed(1) + " " + sy.toFixed(1) + " V" + ey.toFixed(1) + " H" + ex.toFixed(1);
+      el("path", { d: d });
+      var g = el("path", { d: d, "class": "glow" }); g.style.animationDelay = (i * 0.65) + "s";
+      el("circle", { cx: mx, cy: ey, r: 2.6, "class": "via" });
+      el("circle", { cx: ex, cy: ey, r: 4 });
+    });
+  }
+  var t; addEventListener("resize", function () { clearTimeout(t); t = setTimeout(draw, 120); });
+  addEventListener("load", draw); if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  setTimeout(draw, 300); setTimeout(draw, 1200);
 })();

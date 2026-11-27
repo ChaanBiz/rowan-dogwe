@@ -333,7 +333,7 @@ body.booted .scan { animation: scan 1.1s cubic-bezier(.5, 0, .3, 1) 0.05s 1 both
   .pi-name i { padding-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; transition-delay: 0s !important; }
 }
 
 /* ==========================================================================
@@ -1207,3 +1207,177 @@ ol.ff-names { font-size: clamp(8px, 5.2cqi, 13px) !important; }
   .ff-card { grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr); padding: 9px; }
   .ff-card figcaption p { font-size: 10px; line-height: 1.3; }
 }
+
+/* ===== v37 - Achievements: signal path. A gold data packet runs along the bus; each date is a tiny chip that lights up as the
+   packet reaches it, and the trace to its card carries the current. Extracurricular row = recognitions only (3 cards). ===== */
+@media (min-width: 861px) {
+  .tml > .acts > .items.tl-row { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); }
+}
+.tl-nodes { grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 2.1fr) repeat(5, minmax(0, 1fr)); }
+.tl-bus::after { display: none; }                         /* the CSS streak is replaced by the JS packet */
+.tl-bus::before { background: linear-gradient(90deg, rgba(214, 169, 92, 0.25), rgba(214, 169, 92, 0.55)); box-shadow: none; height: 2px; margin-top: -1px; }
+.tl-bus .tl-lit { position: absolute; left: 0; top: 50%; height: 3px; margin-top: -1.5px; width: 0; z-index: 0; border-radius: 2px; pointer-events: none;
+  background: linear-gradient(90deg, var(--gold-fill), var(--gold-hi)); box-shadow: 0 0 12px rgba(241, 211, 138, 0.75); }
+.tl-pkt { position: absolute; left: 0; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; z-index: 2; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, #fffbe8 0 35%, #f1d38a 60%, rgba(241, 211, 138, 0) 72%); box-shadow: 0 0 16px 4px rgba(246, 220, 162, 0.85); }
+.tl-pkt::before { content: ""; position: absolute; right: 6px; top: 50%; width: 70px; height: 3px; margin-top: -1.5px; border-radius: 2px; background: linear-gradient(90deg, rgba(246, 220, 162, 0), rgba(255, 248, 220, 0.95)); }
+.tl-pkt.on { opacity: 1; }
+
+/* each date = a tiny chip (dark die, gold pins on top and bottom) */
+.tl-nodes b { position: relative; padding: 6px 9px; border-radius: 3px; background: #121413 !important; color: rgba(241, 211, 138, 0.75) !important;
+  border: 1px solid rgba(214, 169, 92, 0.55) !important; box-shadow: 0 0 0 3px var(--bg), inset 0 0 0 1px rgba(0, 0, 0, 0.6);
+  transition: background 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease; }
+.tl-nodes b::before, .tl-nodes b::after { content: ""; position: absolute; left: 16%; right: 16%; height: 4px; pointer-events: none;
+  background: repeating-linear-gradient(90deg, rgba(214, 169, 92, 0.6) 0 2px, transparent 2px 6px); transition: background 0.35s ease; }
+.tl-nodes b::before { top: -5px; } .tl-nodes b::after { bottom: -5px; }
+.tl-nodes li.bot b { padding: 6px 9px; }
+/* extracurricular chips carry a small medal */
+.tl-nodes li.bot b { padding-left: 21px; }
+.tl-nodes li.bot b > i.md { position: absolute; left: 7px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c4, #d9ad4f 55%, #8f6a1f); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4); }
+.tl-nodes li.lit b { background: var(--gold-grad) !important; color: #111 !important; border-color: var(--gold-edge) !important;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 18px rgba(241, 211, 138, 0.8); }
+.tl-nodes li.lit b::before, .tl-nodes li.lit b::after { background: repeating-linear-gradient(90deg, #f1d38a 0 2px, transparent 2px 6px); }
+.tl-nodes li.flash b { transform: scale(1.14); }
+@media (min-width: 861px) and (max-width: 1100px) { .tl-nodes li.top.flash b { transform: translateY(-13px) scale(1.12); } .tl-nodes li.bot.flash b { transform: translateY(13px) scale(1.12); } .tl-nodes li.bot b { padding-left: 17px; } .tl-nodes li.bot b > i.md { left: 5px; width: 8px; height: 8px; margin-top: -4px; } }
+
+/* the trace to a lit chip carries current toward its card; the card glows */
+.tl-traces path { stroke: rgba(214, 169, 92, 0.55); transition: stroke 0.4s ease, opacity 0.4s ease; }
+.tl-traces path.lit { stroke: var(--gold-hi); stroke-width: 2; opacity: 1; stroke-dasharray: 7 5; animation: tlflow 0.9s linear infinite; filter: drop-shadow(0 0 3px rgba(241, 211, 138, 0.8)); }
+@keyframes tlflow { to { stroke-dashoffset: -24; } }
+.tml [data-tl] { transition: box-shadow 0.5s ease; }
+.tml [data-tl].lit { box-shadow: 0 0 0 1.5px rgba(241, 211, 138, 0.85), 0 0 22px rgba(217, 173, 79, 0.35) !important; }
+@media (prefers-reduced-motion: reduce) { .tl-traces path.lit { animation: none; stroke-dasharray: none; } .tl-pkt { display: none; } }
+.tl-nodes b > i.md { display: block; }
+
+/* ===== v38 - more life in the signal path: power-up, year readout, sparks, unlock pop-ups, live counters ===== */
+.tl-count { margin-left: auto; font: 700 9.5px var(--mono); letter-spacing: 0.16em; color: var(--muted); padding: 2px 8px; border: 1px solid var(--line-2); border-radius: 999px; white-space: nowrap; }
+.tl-count b { color: var(--gold); font-size: 1.15em; display: inline-block; min-width: 1.1em; text-align: right; }
+.tl-count.bump b { animation: tlbump 0.45s ease; }
+@keyframes tlbump { 40% { transform: scale(1.6); color: var(--gold-hi); } }
+/* first run: the board is unpowered, each card switches on when the signal reaches it */
+@media (min-width: 861px) {
+  .tml.boot [data-tl]:not(.on) { filter: grayscale(1) brightness(0.62); opacity: 0.72; }
+  .tml [data-tl] { transition: box-shadow 0.5s ease, filter 0.7s ease, opacity 0.7s ease; }
+}
+/* the year readout that rides on the packet */
+.tl-pkt > em { position: absolute; left: 50%; bottom: 13px; transform: translateX(-50%); font: 700 9px/1 var(--mono); letter-spacing: 0.12em; font-style: normal;
+  color: #111; background: var(--gold-grad); padding: 3px 6px; border-radius: 2px; white-space: nowrap; box-shadow: 0 0 12px rgba(241, 211, 138, 0.7); }
+.tl-pkt > em::after { content: ""; position: absolute; left: 50%; top: 100%; margin-left: -3px; border: 3px solid transparent; border-top-color: #dfb556; }
+/* sparks */
+.tl-spark { position: absolute; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #fff3c4; box-shadow: 0 0 6px 1px rgba(246, 220, 162, 0.95); pointer-events: none; z-index: 4;
+  animation: tlspark 0.75s cubic-bezier(.15, .7, .3, 1) forwards; }
+@keyframes tlspark { from { transform: translate(0, 0) scale(1); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; } }
+/* unlock pop-up */
+.tl-pop { position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, 0); font: 700 9px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap;
+  color: var(--gold-hi); background: #111; border: 1px solid var(--gold); padding: 4px 7px; border-radius: 2px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  animation: tlpop 1.7s ease forwards; }
+.tl-pop.up { animation-name: tlpopup; }
+@keyframes tlpop { 0% { opacity: 0; transform: translate(-50%, -4px) scale(0.8); } 15% { opacity: 1; transform: translate(-50%, 4px) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 10px); } }
+@keyframes tlpopup { 0% { opacity: 0; transform: translate(-50%, 4px) scale(0.8); } 15% { opacity: 1; transform: translate(-50%, -4px) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -10px); } }
+@media (prefers-reduced-motion: reduce) { .tl-spark, .tl-pop { display: none; } .tml.boot [data-tl] { filter: none; opacity: 1; } }
+/* v38b - readable at the page's fitted scale */
+.tl-pop { font-size: 12.5px; padding: 6px 10px; letter-spacing: 0.12em; border-width: 1.5px; }
+.tl-pkt > em { font-size: 12.5px; padding: 4px 8px; bottom: 15px; }
+.tl-count { font-size: 12px; padding: 3px 10px; }
+.tl-count b { font-size: 1.25em; }
+
+/* ===== v39 - Achievements: a true year ruler. Schools are bars above it, recognitions are a bar and pins below it; a playhead
+   sweeps the years, fills each bar as it passes and powers on its card. ===== */
+.yr { position: relative; z-index: 3; height: 150px; margin: 0 6px; }
+.yr-lane { position: absolute; left: 0; right: 0; }
+.yr-edu { top: 14px; height: 30px; }
+.yr-axis { top: 52px; height: 34px; }
+.yr-rec { top: 94px; height: 44px; }
+/* bars */
+.yb { position: absolute; top: 4px; height: 22px; border-radius: 3px; overflow: hidden; background: rgba(214, 169, 92, 0.1); border: 1px solid rgba(214, 169, 92, 0.55); }
+.yb > i { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--f, 0) * 100%); background: var(--gold-grad); box-shadow: 0 0 14px rgba(241, 211, 138, 0.6); }
+.yb > em { position: relative; z-index: 1; display: block; padding: 0 7px; font: 700 10.5px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; font-style: normal;
+  white-space: nowrap; color: var(--gold); transition: color 0.3s ease; }
+.yb.lit > em { color: #111; }
+.yb.rec { top: 2px; background: repeating-linear-gradient(135deg, rgba(214, 169, 92, 0.14) 0 6px, rgba(214, 169, 92, 0.04) 6px 12px); border-style: dashed; }
+/* stems that tie each bar to the ruler */
+.yb::after { content: none; }
+.yr-edu .yb { box-shadow: 0 8px 0 -7px rgba(214, 169, 92, 0.5); }
+/* pins (one-day events) */
+.yp { position: absolute; top: 0; width: 0; height: 100%; }
+.yp::before { content: ""; position: absolute; left: -1px; top: -8px; width: 2px; height: 14px; background: rgba(214, 169, 92, 0.7); }
+.yp > i { position: absolute; left: -12px; top: 5px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  background: #121413; border: 1.5px solid rgba(214, 169, 92, 0.7); font-style: normal; color: var(--gold-hi); font-size: 13px; line-height: 1;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+.yp.crown > i::before { content: "\265B"; }
+.yp.medal > i::before { content: ""; width: 11px; height: 11px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff3c4, #d9ad4f 55%, #8f6a1f); }
+.yp > em { position: absolute; top: 10px; font: 700 10.5px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; font-style: normal; white-space: nowrap; color: var(--gold); }
+.yp.crown > em { right: 18px; text-align: right; }
+.yp.medal > em { left: 18px; }
+.yp.lit > i { background: var(--gold-grad); color: #111; border-color: var(--gold-edge); box-shadow: 0 0 16px rgba(241, 211, 138, 0.85); }
+.yp.flash > i { transform: scale(1.3); }
+/* the ruler */
+.yr-axis::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: linear-gradient(90deg, rgba(214, 169, 92, 0.3), rgba(214, 169, 92, 0.75)); }
+.yt { position: absolute; top: 0; width: 0; }
+.yt::before { content: ""; position: absolute; left: -1px; top: 1px; width: 2px; height: 12px; background: rgba(214, 169, 92, 0.75); }
+.yt > b { position: absolute; top: 15px; left: 0; transform: translateX(-50%); font: 600 10.5px var(--mono); letter-spacing: 0.06em; color: var(--muted); transition: color 0.3s ease; }
+.yt.past > b { color: var(--gold); }
+.yr-now { position: absolute; top: -4px; width: 0; }
+.yr-now::before { content: ""; position: absolute; left: -7px; top: 3px; width: 12px; height: 12px; transform: rotate(45deg); background: var(--gold-grad); box-shadow: 0 0 10px rgba(241, 211, 138, 0.8); }
+.yr-now > b { position: absolute; top: 19px; left: 0; transform: translateX(-60%); font: 700 10.5px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+/* the playhead */
+.yr-head { position: absolute; top: 0; bottom: 6px; left: 0; width: 2px; margin-left: -1px; z-index: 4; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+  background: linear-gradient(180deg, rgba(255, 248, 220, 0), #fff8dc 15%, #f1d38a 85%, rgba(241, 211, 138, 0)); box-shadow: 0 0 12px 2px rgba(246, 220, 162, 0.7); }
+.yr-head.on { opacity: 1; }
+.yr-head > em { position: absolute; left: 50%; top: -12px; transform: translateX(-50%); font: 700 11.5px/1 var(--mono); letter-spacing: 0.1em; font-style: normal; text-transform: uppercase;
+  color: #111; background: var(--gold-grad); padding: 4px 8px; border-radius: 2px; white-space: nowrap; box-shadow: 0 0 14px rgba(241, 211, 138, 0.8); }
+@media (max-width: 860px) { .yr { display: none; } }
+@media (prefers-reduced-motion: reduce) { .yr-head { display: none; } }
+/* v39b - ruler row positioned; pins on two rows so labels never collide; short bars label outside */
+.yr-axis { position: absolute; left: 0; right: 0; }
+.yr { height: 160px; }
+.yr-edu { top: 8px; height: 32px; }
+.yr-axis { top: 48px; height: 36px; }
+.yr-rec { top: 90px; height: 62px; }
+.yp.crown { top: 0; } .yp.crown::before { top: -8px; height: 14px; }
+.yp.crown > em { right: auto; left: 18px; text-align: left; }
+.yp.medal { top: 0; } .yp.medal > i { top: 31px; } .yp.medal::before { top: -8px; height: 40px; }
+.yp.medal > em { left: auto; right: 18px; top: 36px; text-align: right; }
+.yb.short > em { position: absolute; bottom: 100%; right: -2px; padding: 0 0 3px; line-height: 1; color: var(--gold) !important; }
+.yb.short { overflow: visible; }
+.yr-now > b { transform: translateX(-50%); top: 20px; }
+.yp > em, .yb.short > em { background: var(--bg); padding: 1px 5px; border-radius: 2px; }
+.yb.short > em { padding: 1px 4px 2px; bottom: calc(100% + 2px); }
+.yr-head.end > em { opacity: 0; }
+.yr-head > em { transition: opacity 0.3s ease; }
+.yb.short.l > em { right: auto; left: -2px; }
+@media (max-width: 1100px) { .yp > em { font-size: 9.5px; letter-spacing: 0.02em; } .yp.crown > em { left: 15px; } .yp.medal > em { right: 15px; } }
+/* v39c - a bar's label "loads" the instant the playhead enters it: a dark tag with bright gold text, readable over any fill */
+.yb:not(.short) > em { display: inline-block; margin: 1px 0 0 2px; padding: 0 7px; line-height: 18px; border-radius: 2px; color: rgba(214, 169, 92, 0.75);
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
+.yb.go:not(.short) > em, .yb.lit:not(.short) > em { background: #111; color: #f6dca2; box-shadow: 0 0 0 1px rgba(214, 169, 92, 0.55), 0 0 10px rgba(241, 211, 138, 0.35); }
+.yb.short.go > em { color: var(--gold-hi) !important; }
+.yb:not(.short) > em { position: absolute; left: 2px; top: 50%; margin: 0; transform: translateY(-50%); line-height: 16px; }
+
+/* ===== v40 - Family & Friends as a little circuit board: an RPD hub chip in the centre channel, gold traces to every card,
+   current pulsing out along them ===== */
+.ff-traces, .ff-hub { display: none; }
+@media (min-width: 861px) {
+  .ff { position: relative; column-gap: clamp(56px, 5.2vw, 84px) !important; row-gap: clamp(26px, 3.4vh, 40px) !important; }
+  .ff-traces { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+  .ff-card { position: relative; z-index: 1; }
+  .ff-traces path { fill: none; stroke: rgba(214, 169, 92, 0.6); stroke-width: 1.6; stroke-linejoin: round; }
+  .ff-traces path.glow { stroke: var(--gold-hi); stroke-width: 2.4; stroke-dasharray: 10 70; animation: ffflow 2.6s linear infinite; filter: drop-shadow(0 0 3px rgba(241, 211, 138, 0.9)); }
+  .ff-traces circle { fill: var(--bg); stroke: var(--gold); stroke-width: 1.6; }
+  .ff-traces circle.via { fill: var(--gold-hi); stroke: none; }
+  @keyframes ffflow { from { stroke-dashoffset: 80; } to { stroke-dashoffset: 0; } }
+  .ff-hub { display: grid; place-items: center; align-content: center; position: absolute; left: 50%; top: 50%; z-index: 2; width: clamp(46px, 4.2vw, 64px); aspect-ratio: 1;
+    transform: translate(-50%, -50%); background: linear-gradient(150deg, #1d201e, #0b0c0c); border: 1.5px solid var(--gold-fill); border-radius: 6px;
+    box-shadow: 0 0 0 4px var(--bg), 0 0 22px rgba(217, 173, 79, 0.45); animation: ffhub 2.6s ease-in-out infinite; }
+  .ff-hub b { font: 700 clamp(12px, 1.1vw, 16px)/1 var(--serif); letter-spacing: 0.02em; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .ff-hub small { font: 600 clamp(6px, 0.5vw, 7.5px)/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: rgba(241, 211, 138, 0.7); margin-top: 3px; }
+  .ff-hub .pins { position: absolute; }
+  .ff-hub .pins.t, .ff-hub .pins.b { left: 18%; right: 18%; height: 6px; background: repeating-linear-gradient(90deg, var(--gold-fill) 0 3px, transparent 3px 7px); }
+  .ff-hub .pins.t { top: -8px; } .ff-hub .pins.b { bottom: -8px; }
+  .ff-hub .pins.l, .ff-hub .pins.r { top: 18%; bottom: 18%; width: 6px; background: repeating-linear-gradient(180deg, var(--gold-fill) 0 3px, transparent 3px 7px); }
+  .ff-hub .pins.l { left: -8px; } .ff-hub .pins.r { right: -8px; }
+  @keyframes ffhub { 50% { box-shadow: 0 0 0 4px var(--bg), 0 0 34px rgba(241, 211, 138, 0.75); } }
+}
+@media (prefers-reduced-motion: reduce) { .ff-traces path.glow { animation: none; stroke-dasharray: none; opacity: 0.5; } .ff-hub { animation: none; } }
+@media (min-width: 861px) { .ff { row-gap: clamp(18px, 3vh, 40px) !important; } }
